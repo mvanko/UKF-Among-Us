@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 4736881244451607439}
   - component: {fileID: 5946381616408035972}
   - component: {fileID: 1130992967065256334}
+  - component: {fileID: 3117795870034993336}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -109,7 +110,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8382630975614306048}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 32.85006, y: 12.402193, z: -375.44287}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7396340715710174810}
@@ -143,6 +144,68 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 1.4354439
-  m_Height: 3.3896112
+  m_Height: 3.3389018
   m_Direction: 1
-  m_Center: {x: -0.026424408, y: -0.094733715, z: 0}
+  m_Center: {x: -0.026424408, y: -0.06937897, z: 0}
+--- !u!114 &3117795870034993336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8382630975614306048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e2f823d59be080488bc0f694e06d77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerRigidbody: {fileID: 5946381616408035972}
+  _playerTransform: {fileID: 4736881244451607439}
+  _input:
+    m_Name: Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: c631418f-90ae-4727-bf60-e336ac8117a9
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: Movement
+      m_Id: bc94093b-2bc2-444a-98c6-175cc12295b4
+      m_Path: 2DVector
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input
+      m_Flags: 4
+    - m_Name: up
+      m_Id: 349832f6-9951-4b34-ae70-9661b947dc6f
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input
+      m_Flags: 8
+    - m_Name: down
+      m_Id: 0b2a3b45-ae94-4b2a-b3a9-363233c69982
+      m_Path: <Keyboard>/s
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input
+      m_Flags: 8
+    - m_Name: left
+      m_Id: 9e7f1c45-f33e-4014-83c8-27244af3ec1d
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input
+      m_Flags: 8
+    - m_Name: right
+      m_Id: ececb67d-8193-4728-9ded-da5a78e10829
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input
+      m_Flags: 8
