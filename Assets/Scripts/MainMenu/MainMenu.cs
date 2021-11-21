@@ -14,6 +14,15 @@ public class MainMenu : MonoBehaviour
 
     private const string LEVEL1NAME = "Level1";
 
+    private void Awake()
+    {
+        if(PlayerPrefs.HasKey("fullScreenMode"))
+        {
+            Screen.SetResolution(PlayerPrefs.GetInt("width"),
+                PlayerPrefs.GetInt("height"), (FullScreenMode) PlayerPrefs.GetInt("fullScreenMode"));
+        }
+    }
+
     private void OnEnable()
     {
         _uiStartButton.onClick.AddListener(StartGame);

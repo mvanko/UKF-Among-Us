@@ -87,6 +87,10 @@ public class Settings : MonoBehaviour
         Resolution[] res = Screen.resolutions;
         Screen.SetResolution(res[_uiResolutionDropdown.value].width,
             res[_uiResolutionDropdown.value].height, (FullScreenMode)_uiWindowDropdown.value);
+
+        PlayerPrefs.SetInt("width", res[_uiResolutionDropdown.value].width);
+        PlayerPrefs.SetInt("height", res[_uiResolutionDropdown.value].height);
+        PlayerPrefs.SetInt("fullScreenMode", _uiWindowDropdown.value);
     }
 
     private void MusicVolumeChanged(float value)
