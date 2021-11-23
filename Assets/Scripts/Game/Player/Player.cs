@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] Rigidbody _playerRigidbody;
     [SerializeField] Transform _playerTransform;
     [SerializeField] InputAction _input;
+    [SerializeField] Animator _myAnim;
 
     private Vector2 _movementInput;
     private PlayerData.Color _playerColor;
@@ -49,15 +50,23 @@ public class Player : MonoBehaviour
         _input.Disable();
     }
 
+    void Start()
+    {
+        _playerRigidbody = GetComponent<Rigidbody>();
+        _playerTransform = transform.GetChild(0);
+        _myAnim = GetComponent<Animator>();
+    }
+
     private void Update()
     {
         _movementInput = _input.ReadValue<Vector2>();
 
         //Kod na otaèanie postavy, zatia¾ nepotrebné
-        //if(_movementInput.x != 0)
-        //{
-        //    _playerTransform.localScale = new Vector2(Mathf.Sign(_movementInput.x), 1);
-        //}
+        if(_movementInput.x != 0)
+        {
+            _playerTransform.localScale = new Vector2(Mathf.Sign(_movementInput.x), 1);
+        }
+        _myAnim.SetFloat("Speed", _movementInput.magnitude);
     }
 
     private void FixedUpdate()
