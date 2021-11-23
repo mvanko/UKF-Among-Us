@@ -162,6 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerRigidbody: {fileID: 5946381616408035972}
   _playerTransform: {fileID: 4736881244451607439}
+  _myAnim: {fileID: 8007782247390794474}
   _input:
     m_Name: Input
     m_Type: 0
