@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator _playerAnimator;
     [SerializeField] private InputAction _input;
 
-    private Vector2 _movementInput;
+    private Vector2 _lastMovementInput;
     private PlayerData.Color _playerColor;
     private Sprite _playerSprite;
 
@@ -50,20 +50,61 @@ public class Player : MonoBehaviour
         _input.Disable();
     }
 
+    private void ResetAnimatorVariables()
+    {
+        _playerAnimator.SetBool("Backwards", false);
+        _playerAnimator.SetBool("Forwards", false);
+        _playerAnimator.SetBool("Left", false);
+        _playerAnimator.SetBool("Right", false);
+        _playerAnimator.SetBool("Idle", false);
+    }
+
+    private void ChangeAnimation(Vector2 newMovementInput)
+    {
+        ResetAnimatorVariables();
+
+        if (newMovementInput.x != 0)
+        {
+            if (newMovementInput.x > 0)
+            {
+                _playerAnimator.SetBool("Right", true);
+            }
+            else
+            {
+                _playerAnimator.SetBool("Left", true);
+            }
+        }
+        else if (newMovementInput.y != 0)
+        {
+            if (newMovementInput.y > 0)
+            {
+                _playerAnimator.SetBool("Forwards", true);
+            }
+            else
+            {
+                _playerAnimator.SetBool("Backwards", true);
+            }
+        }
+        else if(newMovementInput.magnitude == 0)
+        {
+            _playerAnimator.SetBool("Idle", true);
+        }
+    }
+
     private void Update()
     {
-        _movementInput = _input.ReadValue<Vector2>();
+        Vector2 currentInput = _input.ReadValue<Vector2>();
 
-        ////Kod na otaèanie postavy, zatia¾ nepotrebné
-        //if(_movementInput.x != 0)
-        //{
-        //    _playerTransform.localScale = new Vector2(Mathf.Sign(_movementInput.x), 1);
-        //}
-        _playerAnimator.SetFloat("Speed", _movementInput.magnitude);
+        if (_lastMovementInput != currentInput)
+        {
+            ChangeAnimation(currentInput);
+        }
+
+        _lastMovementInput = currentInput;
     }
 
     private void FixedUpdate()
     {
-        _playerRigidbody.velocity = _movementInput * GameManager.Instance.PlayerData.movementSpeed;
+        _playerRigidbody.velocity = _lastMovementInput * GameManager.Instance.PlayerData.movementSpeed;
     }
 }
