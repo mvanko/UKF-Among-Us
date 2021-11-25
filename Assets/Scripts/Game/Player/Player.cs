@@ -11,31 +11,31 @@ public class Player : MonoBehaviour
     [SerializeField] private InputAction _input;
 
     private Vector2 _lastMovementInput;
-    private PlayerData.Color _playerColor;
+    private PlayerData.PlayerColor _playerColor;
     private Sprite _playerSprite;
 
-    public PlayerData.Color PlayerColor => _playerColor;
+    public PlayerData.PlayerColor PlayerColor => _playerColor;
 
     //TODO
-    public void Setup(PlayerData.Color playerColor, PlayerData playerData)
+    public void Setup(PlayerData.PlayerColor playerColor, PlayerData playerData)
     {
         _playerColor = playerColor;
         
         switch(_playerColor)
         {
-            case PlayerData.Color.BLUE:
+            case PlayerData.PlayerColor.BLUE:
                 break;
-            case PlayerData.Color.GREEN:
+            case PlayerData.PlayerColor.GREEN:
                 break;
-            case PlayerData.Color.ORANGE:
+            case PlayerData.PlayerColor.ORANGE:
                 break;
-            case PlayerData.Color.PINK:
+            case PlayerData.PlayerColor.PINK:
                 break;
-            case PlayerData.Color.RED:
+            case PlayerData.PlayerColor.RED:
                 break;
-            case PlayerData.Color.WHITE:
+            case PlayerData.PlayerColor.WHITE:
                 break;
-            case PlayerData.Color.YELLOW:
+            case PlayerData.PlayerColor.YELLOW:
                 break;
         }
     }

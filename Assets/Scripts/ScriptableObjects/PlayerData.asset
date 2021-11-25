@@ -12,46 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ef5e2dc1e1968438ba605f0d70b80f, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  blueSprite: {fileID: -2405614104501707476, guid: 8bf60c498d97b3e4a8c96ed28443ef2c,
-    type: 3}
-  greenSprite: {fileID: 6491500289601007732, guid: 4c2441a9c1c1b644782b06f4d6634916,
-    type: 3}
-  orangeSprite: {fileID: -1966370918690641546, guid: 504d0121460990040a3a7f9d56126f33,
-    type: 3}
-  pinkSprite: {fileID: -4609138333084755629, guid: a4b409b93fb5b7d449690e437a635b83,
-    type: 3}
-  redSprite: {fileID: -1746221490527130380, guid: cabae253b7734c24c8ea3cfdeda92a95,
-    type: 3}
-  whiteSprite: {fileID: 6033049191816652427, guid: fda01072536592348a6fcfc48aff4dd5,
-    type: 3}
-  yellowSprite: {fileID: -88873017573023425, guid: 45a4819cbd1c10e4194f9045f597045c,
-    type: 3}
-  deadBlueSprite: {fileID: -63889935926982942, guid: 1f48e27f369d06c4cabbff85467deafb,
-    type: 3}
-  deadGreenSprite: {fileID: 5668153611511909805, guid: c7e17a4574a49ce4396d911b9354d460,
-    type: 3}
-  deadOrangeSprite: {fileID: 3662473360873581678, guid: 9426e705866647147a30a25479ca2f15,
-    type: 3}
-  deadPinkSprite: {fileID: -6219642240960816556, guid: c009a408a9efae34d86ac16fa8178ad5,
-    type: 3}
-  deadRedSprite: {fileID: 7604178136188970605, guid: eaf962eb80db3144f9f745a4f963ca94,
-    type: 3}
-  deadWhiteSprite: {fileID: 8416362460879665616, guid: 6d11dfdbf7cb03844a773be7adccb8b1,
-    type: 3}
-  deadYellowSprite: {fileID: -8109198773484970380, guid: ee77119b4c5772a49be892e3aab43994,
-    type: 3}
-  deadBlueLayingSprite: {fileID: 21300000, guid: 08a1376b3888dcb4abc2bdb9e8f5f8fd,
-    type: 3}
-  deadGreenLayingSprite: {fileID: 21300000, guid: 96f4f02a1ac415a48a9d8c9ccbab4875,
-    type: 3}
-  deadOrangeLayingSprite: {fileID: 21300000, guid: dd86bb84d4230ce40b7d9e196ba903b0,
-    type: 3}
-  deadPinkLayingSprite: {fileID: 21300000, guid: a1d071bd2920d4c44b27fe8f52618eda,
-    type: 3}
-  deadRedLayingSprite: {fileID: 21300000, guid: 76dd4a510e901b244ba9545597eb28c8,
-    type: 3}
-  deadWhiteLayingSprite: {fileID: 21300000, guid: 765f912997b078c46a59693a1779f238,
-    type: 3}
-  deadYellowLayingSprite: {fileID: 21300000, guid: 835f4748e5aa44c4e8c30b7a31b870d2,
-    type: 3}
+  blue: {r: 0, g: 0.13947919, b: 0.9339623, a: 1}
+  green: {r: 0, g: 0.990566, b: 0.19790211, a: 1}
+  orange: {r: 1, g: 0.65289426, b: 0, a: 1}
+  pink: {r: 1, g: 0, b: 0.94414234, a: 1}
+  red: {r: 1, g: 0, b: 0, a: 1}
+  white: {r: 1, g: 1, b: 1, a: 1}
+  yellow: {r: 0.9970765, g: 1, b: 0, a: 1}
   movementSpeed: 5

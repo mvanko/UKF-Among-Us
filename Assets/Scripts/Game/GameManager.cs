@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameData _gameData;
 
     private List<Player> _activePlayers = new List<Player>();
-    private List<PlayerData.Color> _freePlayerColors = new List<PlayerData.Color>();
+    private List<PlayerData.PlayerColor> _freePlayerColors = new List<PlayerData.PlayerColor>();
 
     public GameData GameData => _gameData;
     public PlayerData PlayerData => _gameData.playerData;
@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    private PlayerData.Color? GetFreePlayerColor()
+    private PlayerData.PlayerColor? GetFreePlayerColor()
     {
         if(_freePlayerColors.Count > 0)
         {
