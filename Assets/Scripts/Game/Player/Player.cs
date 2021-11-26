@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     private PlayerData.PlayerColor _playerColor;
     private Sprite _playerSprite;
 
+    private bool isDead = false;
+
     public PlayerData.PlayerColor PlayerColor => _playerColor;
 
     //TODO
@@ -42,6 +44,7 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
+        _playerAnimator.SetBool("IsDead", true); //for testing
         _input.Enable();
     }
 
