@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
     {
         isDead = true; 
         
-        myAnim.SetBool("IsDead", isDead);
+        _playerAnimator.SetBool("IsDead", isDead);
         myCollider.enabled;
     }
     
