@@ -17,6 +17,17 @@ public class Player : MonoBehaviour
     private bool isDead = false;
 
     public PlayerData.PlayerColor PlayerColor => _playerColor;
+    
+    bool isImposter;
+    InputAction KILL;
+    
+    Player target;
+    Collider myCollider;
+    
+    private void Awake()
+    {
+        KILL.performed += KILLTarget;
+    }
 
     //TODO
     public void Setup(PlayerData.PlayerColor playerColor, PlayerData playerData)
