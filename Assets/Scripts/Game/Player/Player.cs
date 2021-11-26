@@ -18,11 +18,11 @@ public class Player : MonoBehaviour
 
     public PlayerData.PlayerColor PlayerColor => _playerColor;
     
-    bool isImposter;
-    InputAction KILL;
+    [SerializeField] bool isImposter;
+    [SerializeField] InputAction KILL;
     
     Player target;
-    Collider myCollider;
+    [SerializeField] Collider myCollider;
     
     private void Awake()
     {
