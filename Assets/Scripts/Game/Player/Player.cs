@@ -28,7 +28,55 @@ public class Player : MonoBehaviour
     {
         KILL.performed += KILLTarget;
     }
+    
+    public void SetRole (bool newRole)
+    {
+        isImposter = newRole;
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Player tempTarget = other.GetComponent<Player>();
+            if (isImposter)
+            {
+                if (tempTarget.isImposter)
+                    return;
+                else
+                {
+                    target = tempTarget;
+                    Debug.Log(target.name);
+                }
+            }
+        }
+    }
+    
+    void KillTarget(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            if (target == null)
+                return;
+            else
+            {
+                if (target.isDead)
+                    return;
+                transform.position = target.transofrm.position;
+                target.Die();
+                target = null;
+            }
+        }
+    }
 
+    public void Die()
+    {
+        isDead = true; 
+        
+        myAnim.SetBool("IsDead", isDead);
+        myCollider.enabled;
+    }
+    
     //TODO
     public void Setup(PlayerData.PlayerColor playerColor, PlayerData playerData)
     {
@@ -55,13 +103,15 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerAnimator.SetBool("IsDead", true); //for testing
-        _input.Enable();
+        WASD.Enable();
+        KILL.Enable();
+        _playerAnimator.SetBool("IsDead", true); //for testing       
     }
 
     private void OnDisable()
     {
-        _input.Disable();
+        WASD.Disable();
+        KILL.Disable();
     }
 
     private void ResetAnimatorVariables()
