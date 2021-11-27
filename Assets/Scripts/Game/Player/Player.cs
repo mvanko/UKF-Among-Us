@@ -14,6 +14,9 @@ public class Player : MonoBehaviour
     private PlayerData.PlayerColor _playerColor;
     private Sprite _playerSprite;
 
+    static Color myColor;
+    SpriteRenderer myAvatarSprite;
+
     private bool isDead = false;
 
     public PlayerData.PlayerColor PlayerColor => _playerColor;
@@ -155,6 +158,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        myAvatarSprite = _playerTransform.GetComponent<SpriteRenderer>();
+        if (myColor == Color.clear)
+            myColor = Color.white;
+        myAvatarSprite.color = myColor;
+    }
+
     private void Update()
     {
         Vector2 currentInput = _input.ReadValue<Vector2>();
@@ -170,5 +181,13 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         _playerRigidbody.velocity = _lastMovementInput * GameManager.Instance.PlayerData.movementSpeed;
+    }
+
+    public void SetColor(Color newColor) {
+        myColor = newColor;
+        if (myAvatarSprite != null) 
+        {
+            myAvatarSprite.color = myColor;
+        }
     }
 }
