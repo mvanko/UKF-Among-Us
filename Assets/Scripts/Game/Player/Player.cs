@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private GameObject _deadBodyPrototype;
+
     [SerializeField] private Rigidbody _playerRigidbody;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Animator _playerAnimator;
@@ -23,7 +25,8 @@ public class Player : MonoBehaviour
     private Vector2 _lastMovementInput;
     private bool isDead = false;
 
-    private Player tempTarget = null;
+    private List<Player> targets = new List<Player>();
+
     public static Player LocalPlayer => _localPlayer;
     
     private void Awake()
@@ -45,6 +48,7 @@ public class Player : MonoBehaviour
             return;
         }
 
+
         _playerSpriteRenderer.color = myColor;
     }
 
@@ -59,9 +63,20 @@ public class Player : MonoBehaviour
                     return;
                 else
                 {
-                    this.tempTarget = tempTarget;
-                    Debug.Log(this.tempTarget.name);
+                    targets.Add(tempTarget);
                 }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Player tempTarget = other.GetComponent<Player>();
+            if(targets.Contains(tempTarget))
+            {
+                targets.Remove(tempTarget);
             }
         }
     }
@@ -96,15 +111,16 @@ public class Player : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            if (tempTarget == null)
+            if (targets.Count == 0)
                 return;
             else
             {
-                if (tempTarget.isDead)
+                Player target = targets[targets.Count - 1];
+                if (target.isDead)
                     return;
-                _playerTransform.position = tempTarget._playerTransform.position;
-                tempTarget.Die();
-                tempTarget = null;
+                _playerTransform.position = target._playerTransform.position;
+                target.Die();
+                targets.Remove(target);
             }
         }
     }
@@ -112,11 +128,13 @@ public class Player : MonoBehaviour
     public void Die()
     {
         isDead = true; 
-        
         _playerAnimator.SetBool("IsDead", isDead);
         _playerCollider.enabled = false;
+
+        DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
+        deadBody.Setup(_playerSpriteRenderer.color);
     }
-    
+
     private void ResetAnimatorVariables()
     {
         _playerAnimator.SetBool("Backwards", false);

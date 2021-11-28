@@ -362,6 +362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e2f823d59be080488bc0f694e06d77f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _deadBodyPrototype: {fileID: 1209725668045297167, guid: da7b335c4e834e545a3764d52f06a1a3,
+    type: 3}
   _playerRigidbody: {fileID: 5946381616408035972}
   _playerTransform: {fileID: 4736881244451607439}
   _playerAnimator: {fileID: 8007782247390794474}
