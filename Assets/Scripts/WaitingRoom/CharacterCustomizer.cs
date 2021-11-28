@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CharacterCustomizer : MonoBehaviour
 {
@@ -8,6 +10,6 @@ public class CharacterCustomizer : MonoBehaviour
 
     public void SetColor(int colorIndex)
     {
-        //Player..SetColor(allColors[colorIndex]);
+        Player.LocalPlayer.SetColor(allColors[colorIndex]);
     }
 }

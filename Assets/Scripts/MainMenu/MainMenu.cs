@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button _uiSettingsButton;
     [SerializeField] private Button _uiQuitButton;
 
-    private const string LEVEL1NAME = "Level1";
+    private const string WAITINGROOM = "Waiting Room";
 
     private void Awake()
     {
@@ -39,7 +39,7 @@ public class MainMenu : MonoBehaviour
 
     private void StartGame()
     {
-        SceneManager.LoadScene(LEVEL1NAME);
+        SceneManager.LoadScene(WAITINGROOM);
     }
 
     private void OpenSettings()
