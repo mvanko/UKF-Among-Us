@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
             {
                 if (target.isDead)
                     return;
-                _playerTransform.position = target.transform.position;
+                _playerTransform.position = target._playerTransform.position;
                 target.Die();
                 target = null;
             }
@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
         isDead = true; 
         
         _playerAnimator.SetBool("IsDead", isDead);
-        myCollider.enabled;
+        myCollider.enabled = false;
     }
     
     //TODO
