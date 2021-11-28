@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
             {
                 if (target.isDead)
                     return;
-                transform.position = target.transofrm.position;
+                _playerTransform.position = target.transform.position;
                 target.Die();
                 target = null;
             }
@@ -106,14 +106,12 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        WASD.Enable();
         KILL.Enable();
         _playerAnimator.SetBool("IsDead", true); //for testing       
     }
 
     private void OnDisable()
     {
-        WASD.Disable();
         KILL.Disable();
     }
 
