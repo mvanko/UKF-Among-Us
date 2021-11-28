@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameData _gameData;
 
     private List<Player> _activePlayers = new List<Player>();
-    private List<PlayerData.PlayerColor> _freePlayerColors = new List<PlayerData.PlayerColor>();
 
     public GameData GameData => _gameData;
     public PlayerData PlayerData => _gameData.playerData;
@@ -19,16 +18,6 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    private PlayerData.PlayerColor? GetFreePlayerColor()
-    {
-        if(_freePlayerColors.Count > 0)
-        {
-            return _freePlayerColors[0];
-        }
-
-        return null;
-    }
-
     //TODO
     public void SpawnNewPlayer()
     {
@@ -37,7 +26,6 @@ public class GameManager : MonoBehaviour
     public void AddActivePlayer(Player player)
     {
         _activePlayers.Add(player);
-        _freePlayerColors.Remove(player.PlayerColor);
     }
 
     public void RemoveActivePlayer(Player player)

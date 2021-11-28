@@ -8,66 +8,103 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody _playerRigidbody;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Animator _playerAnimator;
+    [SerializeField] private SpriteRenderer _playerSpriteRenderer;
+    [SerializeField] private Collider _playerCollider;
+
+    [SerializeField] private bool _isImposter;
+    [SerializeField] private bool _hasControl;
+
     [SerializeField] private InputAction _input;
+    [SerializeField] private InputAction KILL;
+
+    private static Player _localPlayer;
+    static Color myColor;
 
     private Vector2 _lastMovementInput;
-    private PlayerData.PlayerColor _playerColor;
-    private Sprite _playerSprite;
-
-    static Color myColor;
-    SpriteRenderer myAvatarSprite;
-
     private bool isDead = false;
 
-    public PlayerData.PlayerColor PlayerColor => _playerColor;
-    
-    [SerializeField] bool isImposter;
-    [SerializeField] InputAction KILL;
-    
-    Player target;
-    [SerializeField] Collider myCollider;
+    private Player tempTarget = null;
+    public static Player LocalPlayer => _localPlayer;
     
     private void Awake()
     {
-        KILL.performed += KILLTarget;
+        KILL.performed += KillTarget;
     }
-    
-    public void SetRole (bool newRole)
+
+    private void Start()
     {
-        isImposter = newRole;
+        if (myColor == Color.clear)
+            myColor = Color.white;
+
+        if(_hasControl)
+        {
+            _localPlayer = this;
+        } 
+        else
+        {
+            return;
+        }
+
+        _playerSpriteRenderer.color = myColor;
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
             Player tempTarget = other.GetComponent<Player>();
-            if (isImposter)
+            if (_isImposter)
             {
-                if (tempTarget.isImposter)
+                if (tempTarget._isImposter)
                     return;
                 else
                 {
-                    target = tempTarget;
-                    Debug.Log(target.name);
+                    this.tempTarget = tempTarget;
+                    Debug.Log(this.tempTarget.name);
                 }
             }
         }
     }
-    
+
+    private void OnEnable()
+    {
+        _input.Enable();
+        KILL.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _input.Disable();
+        KILL.Disable();
+    }
+
+    public void SetRole(bool newRole)
+    {
+        _isImposter = newRole;
+    }
+
+    public void SetColor(Color newColor)
+    {
+        myColor = newColor;
+        if (_playerSpriteRenderer != null)
+        {
+            _playerSpriteRenderer.color = myColor;
+        }
+    }
+
     void KillTarget(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            if (target == null)
+            if (tempTarget == null)
                 return;
             else
             {
-                if (target.isDead)
+                if (tempTarget.isDead)
                     return;
-                _playerTransform.position = target._playerTransform.position;
-                target.Die();
-                target = null;
+                _playerTransform.position = tempTarget._playerTransform.position;
+                tempTarget.Die();
+                tempTarget = null;
             }
         }
     }
@@ -77,44 +114,9 @@ public class Player : MonoBehaviour
         isDead = true; 
         
         _playerAnimator.SetBool("IsDead", isDead);
-        myCollider.enabled = false;
+        _playerCollider.enabled = false;
     }
     
-    //TODO
-    public void Setup(PlayerData.PlayerColor playerColor, PlayerData playerData)
-    {
-        _playerColor = playerColor;
-        
-        switch(_playerColor)
-        {
-            case PlayerData.PlayerColor.BLUE:
-                break;
-            case PlayerData.PlayerColor.GREEN:
-                break;
-            case PlayerData.PlayerColor.ORANGE:
-                break;
-            case PlayerData.PlayerColor.PINK:
-                break;
-            case PlayerData.PlayerColor.RED:
-                break;
-            case PlayerData.PlayerColor.WHITE:
-                break;
-            case PlayerData.PlayerColor.YELLOW:
-                break;
-        }
-    }
-
-    private void OnEnable()
-    {
-        KILL.Enable();
-        _playerAnimator.SetBool("IsDead", true); //for testing       
-    }
-
-    private void OnDisable()
-    {
-        KILL.Disable();
-    }
-
     private void ResetAnimatorVariables()
     {
         _playerAnimator.SetBool("Backwards", false);
@@ -156,16 +158,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        myAvatarSprite = _playerTransform.GetComponent<SpriteRenderer>();
-        if (myColor == Color.clear)
-            myColor = Color.white;
-        myAvatarSprite.color = myColor;
-    }
-
     private void Update()
     {
+        if(!_hasControl)
+        {
+            return;
+        }
+
         Vector2 currentInput = _input.ReadValue<Vector2>();
 
         if (_lastMovementInput != currentInput)
@@ -179,13 +178,5 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         _playerRigidbody.velocity = _lastMovementInput * GameManager.Instance.PlayerData.movementSpeed;
-    }
-
-    public void SetColor(Color newColor) {
-        myColor = newColor;
-        if (myAvatarSprite != null) 
-        {
-            myAvatarSprite.color = myColor;
-        }
     }
 }

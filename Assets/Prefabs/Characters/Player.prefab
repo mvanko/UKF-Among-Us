@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 1130992967065256334}
   - component: {fileID: 3117795870034993336}
   - component: {fileID: 8007782247390794474}
+  - component: {fileID: 1090756354090350240}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -364,6 +365,10 @@ MonoBehaviour:
   _playerRigidbody: {fileID: 5946381616408035972}
   _playerTransform: {fileID: 4736881244451607439}
   _playerAnimator: {fileID: 8007782247390794474}
+  _playerSpriteRenderer: {fileID: 8537613617338883611}
+  _playerCollider: {fileID: 1130992967065256334}
+  _isImposter: 0
+  _hasControl: 0
   _input:
     m_Name: Input
     m_Type: 0
@@ -412,6 +417,22 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Input
       m_Flags: 8
+  KILL:
+    m_Name: KILL
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b0e1235e-bd05-4d65-bcf8-ecd3cabfac76
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: d5e92ef8-28f8-42e0-91d4-5bc35049f6c2
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: KILL
+      m_Flags: 0
 --- !u!95 &8007782247390794474
 Animator:
   serializedVersion: 3
@@ -431,6 +452,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!135 &1090756354090350240
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8382630975614306048}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.5
+  m_Center: {x: 0.00000023841858, y: 0, z: 0}
 --- !u!1 &8700610439912495353
 GameObject:
   m_ObjectHideFlags: 0
