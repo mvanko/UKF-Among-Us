@@ -477,6 +477,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3633558430410158058}
   - component: {fileID: 1563221391166452237}
+  - component: {fileID: 1295760651876125556}
   m_Layer: 0
   m_Name: Point Light 2D
   m_TagString: Untagged
@@ -539,3 +540,15 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &1295760651876125556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8700610439912495353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e2d5178d5b907c4abfb8ee9473a76df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

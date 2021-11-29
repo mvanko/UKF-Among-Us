@@ -362,9 +362,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e2f823d59be080488bc0f694e06d77f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _deadBodyPrototype: {fileID: 0}
   _playerRigidbody: {fileID: 5946381616408035972}
   _playerTransform: {fileID: 4736881244451607439}
   _playerAnimator: {fileID: 8007782247390794474}
+  _playerSpriteRenderer: {fileID: 0}
+  _playerCollider: {fileID: 0}
+  _isImposter: 0
+  _hasControl: 0
   _input:
     m_Name: Input
     m_Type: 0
@@ -413,6 +418,14 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Input
       m_Flags: 8
+  KILL:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
 --- !u!95 &8007782247390794474
 Animator:
   serializedVersion: 3
