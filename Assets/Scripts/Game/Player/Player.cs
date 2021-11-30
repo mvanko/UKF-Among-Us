@@ -234,6 +234,7 @@ public class Player : MonoBehaviour
       {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, body.position - transform.position);
+        Debug.DrawRay(transform.position, body.position - transform.position, Color.cyan);
         if(Physics.Raycast(ray, out hit, 1000f, ~ignoreForBody))
         {
           if(hit.transform == body)

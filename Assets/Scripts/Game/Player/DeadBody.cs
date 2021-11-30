@@ -21,6 +21,7 @@ public class DeadBody : MonoBehaviour
 
     public void Report()
     {
+      Debug.Log("Reported");
       Destroy(gameObject);
     }
 }
