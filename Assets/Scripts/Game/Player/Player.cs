@@ -28,10 +28,20 @@ public class Player : MonoBehaviour
     private List<Player> targets = new List<Player>();
 
     public static Player LocalPlayer => _localPlayer;
-    
+
+    public static List<Transform> allBodies;
+    List<Transform> bodiesFound;
+
+    [SerializeField] InputAction REPORT;
+    [SerializeField] LayerMask ignoreForBody;
+
+
     private void Awake()
     {
         KILL.performed += KillTarget;
+
+        REPORT.performed += ReportBody;
+
     }
 
     private void Start()
@@ -42,7 +52,7 @@ public class Player : MonoBehaviour
         if(_hasControl)
         {
             _localPlayer = this;
-        } 
+        }
         else
         {
             return;
@@ -50,6 +60,12 @@ public class Player : MonoBehaviour
 
 
         _playerSpriteRenderer.color = myColor;
+
+
+        allBodies = new List<Transform>();
+        bodiesFound = new List<Transform>();
+
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -85,12 +101,18 @@ public class Player : MonoBehaviour
     {
         _input.Enable();
         KILL.Enable();
+
+        REPORT.Enable();
+
     }
 
     private void OnDisable()
     {
         _input.Disable();
         KILL.Disable();
+
+        REPORT.Disable();
+
     }
 
     public void SetRole(bool newRole)
@@ -127,9 +149,10 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        isDead = true; 
+        isDead = true;
         _playerAnimator.SetBool("IsDead", isDead);
         _playerCollider.enabled = false;
+        gameObject.layer = 9;
 
         DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
@@ -191,10 +214,58 @@ public class Player : MonoBehaviour
         }
 
         _lastMovementInput = currentInput;
+
+
+        if(allBodies.Count > 0)
+        {
+          BodySearch();
+        }
+
     }
 
     private void FixedUpdate()
     {
         _playerRigidbody.velocity = _lastMovementInput * GameManager.Instance.PlayerData.movementSpeed;
     }
+
+    void BodySearch()
+    {
+      foreach(Transform body in allBodies)
+      {
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position, body.position - transform.position);
+        if(Physics.Raycast(ray, out hit, 1000f, ~ignoreForBody))
+        {
+          if(hit.transform == body)
+          {
+            if(bodiesFound.Contains(body.transform))
+            {
+              return;
+            }
+            bodiesFound.Add(body.transform);
+          }
+          else
+          {
+            bodiesFound.Remove(body.transform);
+          }
+        }
+      }
+    }
+
+    private void ReportBody(InputAction.CallbackContext obj)
+    {
+      if(bodiesFound == null)
+      {
+        return;
+      }
+      if(bodiesFound.Count == 0)
+      {
+        return;
+      }
+      Transform tempBody = bodiesFound[bodiesFound.Count -1];
+      allBodies.Remove(tempBody);
+      bodiesFound.Remove(tempBody);
+      tempBody.GetComponent<DeadBody>().Report();
+    }
+
 }

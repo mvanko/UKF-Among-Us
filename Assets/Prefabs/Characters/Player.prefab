@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
@@ -360,8 +360,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e2f823d59be080488bc0f694e06d77f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   _deadBodyPrototype: {fileID: 1209725668045297167, guid: da7b335c4e834e545a3764d52f06a1a3,
     type: 3}
   _playerRigidbody: {fileID: 5946381616408035972}
@@ -374,67 +374,86 @@ MonoBehaviour:
   _input:
     m_Name: Input
     m_Type: 0
-    m_ExpectedControlType: 
+    m_ExpectedControlType:
     m_Id: c631418f-90ae-4727-bf60-e336ac8117a9
-    m_Processors: 
-    m_Interactions: 
+    m_Processors:
+    m_Interactions:
     m_SingletonActionBindings:
     - m_Name: Movement
       m_Id: bc94093b-2bc2-444a-98c6-175cc12295b4
       m_Path: 2DVector
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
+      m_Interactions:
+      m_Processors:
+      m_Groups:
       m_Action: Input
       m_Flags: 4
     - m_Name: up
       m_Id: 349832f6-9951-4b34-ae70-9661b947dc6f
       m_Path: <Keyboard>/w
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
+      m_Interactions:
+      m_Processors:
+      m_Groups:
       m_Action: Input
       m_Flags: 8
     - m_Name: down
       m_Id: 0b2a3b45-ae94-4b2a-b3a9-363233c69982
       m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
+      m_Interactions:
+      m_Processors:
+      m_Groups:
       m_Action: Input
       m_Flags: 8
     - m_Name: left
       m_Id: 9e7f1c45-f33e-4014-83c8-27244af3ec1d
       m_Path: <Keyboard>/a
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
+      m_Interactions:
+      m_Processors:
+      m_Groups:
       m_Action: Input
       m_Flags: 8
     - m_Name: right
       m_Id: ececb67d-8193-4728-9ded-da5a78e10829
       m_Path: <Keyboard>/d
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
+      m_Interactions:
+      m_Processors:
+      m_Groups:
       m_Action: Input
       m_Flags: 8
   KILL:
     m_Name: KILL
     m_Type: 0
-    m_ExpectedControlType: 
+    m_ExpectedControlType:
     m_Id: b0e1235e-bd05-4d65-bcf8-ecd3cabfac76
-    m_Processors: 
-    m_Interactions: 
+    m_Processors:
+    m_Interactions:
     m_SingletonActionBindings:
-    - m_Name: 
+    - m_Name:
       m_Id: d5e92ef8-28f8-42e0-91d4-5bc35049f6c2
       m_Path: <Keyboard>/space
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
+      m_Interactions:
+      m_Processors:
+      m_Groups:
       m_Action: KILL
       m_Flags: 0
+  REPORT:
+    m_Name: REPORT
+    m_Type: 0
+    m_ExpectedControlType:
+    m_Id: 07507560-5387-4b76-bc8b-47fb9453a885
+    m_Processors:
+    m_Interactions:
+    m_SingletonActionBindings:
+    - m_Name:
+      m_Id: d1e6db90-3f49-4d89-a9f4-cc37523b0066
+      m_Path: <Keyboard>/#(R)
+      m_Interactions:
+      m_Processors:
+      m_Groups:
+      m_Action: REPORT
+      m_Flags: 0
+  ignoreForBody:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!95 &8007782247390794474
 Animator:
   serializedVersion: 3
@@ -450,7 +469,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
@@ -509,8 +528,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.421
@@ -550,5 +569,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e2d5178d5b907c4abfb8ee9473a76df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:

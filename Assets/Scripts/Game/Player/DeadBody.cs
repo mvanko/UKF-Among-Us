@@ -10,4 +10,17 @@ public class DeadBody : MonoBehaviour
     {
         _bodySprite.color = newColor;
     }
+
+    private void OnEnable()
+    {
+      if(Player.allBodies != null)
+      {
+        Player.allBodies.Add(transform);
+      }
+    }
+
+    public void Report()
+    {
+      Destroy(gameObject);
+    }
 }
