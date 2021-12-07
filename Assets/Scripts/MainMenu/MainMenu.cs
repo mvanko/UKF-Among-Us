@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private GameObject _uiSettings;
+    [SerializeField] private GameObject _uiMultiplayer;
 
     [SerializeField] private Button _uiStartButton;
+    [SerializeField] private Button _uiMultiplayerButton;
     [SerializeField] private Button _uiSettingsButton;
     [SerializeField] private Button _uiQuitButton;
 
@@ -26,6 +28,7 @@ public class MainMenu : MonoBehaviour
     private void OnEnable()
     {
         _uiStartButton.onClick.AddListener(StartGame);
+        _uiMultiplayerButton.onClick.AddListener(Multiplayer);
         _uiSettingsButton.onClick.AddListener(OpenSettings);
         _uiQuitButton.onClick.AddListener(QuitGame);
     }
@@ -33,6 +36,7 @@ public class MainMenu : MonoBehaviour
     private void OnDisable()
     {
         _uiStartButton.onClick.RemoveListener(StartGame);
+        _uiMultiplayerButton.onClick.RemoveListener(Multiplayer);
         _uiSettingsButton.onClick.RemoveListener(OpenSettings);
         _uiQuitButton.onClick.RemoveListener(QuitGame);
     }
@@ -40,6 +44,11 @@ public class MainMenu : MonoBehaviour
     private void StartGame()
     {
         SceneManager.LoadScene(WAITINGROOM);
+    }
+
+    private void Multiplayer()
+    {
+        _uiMultiplayer.SetActive(true);
     }
 
     private void OpenSettings()

@@ -1,11 +1,14 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPunObservable
 {
     [SerializeField] private GameObject _deadBodyPrototype;
+    [SerializeField] private GameObject _otherPlayer;
 
     [SerializeField] private Rigidbody _playerRigidbody;
     [SerializeField] private Transform _playerTransform;
@@ -14,13 +17,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Collider _playerCollider;
 
     [SerializeField] private bool _isImposter;
-    [SerializeField] private bool _hasControl;
 
     [SerializeField] private InputAction _input;
     [SerializeField] private InputAction KILL;
 
-    private static Player _localPlayer;
+    public static Player _localPlayer;
     static Color myColor;
+
+    float direction = 1;
 
     private Vector2 _lastMovementInput;
     private bool isDead = false;
@@ -35,6 +39,11 @@ public class Player : MonoBehaviour
     [SerializeField] InputAction REPORT;
     [SerializeField] LayerMask ignoreForBody;
 
+    [SerializeField] Camera myCamera;
+    [SerializeField] GameObject lightMask;
+
+    PhotonView _PV;
+
 
     private void Awake()
     {
@@ -46,26 +55,26 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        _PV = GetComponent<PhotonView>();
+
         if (myColor == Color.clear)
             myColor = Color.white;
 
-        if(_hasControl)
+        if(_PV.IsMine)
         {
             _localPlayer = this;
         }
         else
         {
+            myCamera.gameObject.SetActive(false);
+            lightMask.SetActive(false);
             return;
         }
 
-
         _playerSpriteRenderer.color = myColor;
-
 
         allBodies = new List<Transform>();
         bodiesFound = new List<Transform>();
-
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -201,7 +210,10 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if(!_hasControl)
+
+        _playerTransform.localScale = new Vector2(direction, 1);
+
+        if (!_PV.IsMine)
         {
             return;
         }
@@ -215,6 +227,10 @@ public class Player : MonoBehaviour
 
         _lastMovementInput = currentInput;
 
+        if (currentInput.x != 0)
+        {
+            direction = Mathf.Sign(currentInput.x);
+        }
 
         if(allBodies.Count > 0)
         {
@@ -225,7 +241,17 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!_PV.IsMine)
+        {
+            return;
+        }
+        if (SceneManager.GetActiveScene().name == "Waiting Room")
+        {
+            return;
+        }
+
         _playerRigidbody.velocity = _lastMovementInput * GameManager.Instance.PlayerData.movementSpeed;
+
     }
 
     void BodySearch()
@@ -269,4 +295,15 @@ public class Player : MonoBehaviour
       tempBody.GetComponent<DeadBody>().Report();
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(direction);
+        }
+        else
+        {
+            direction = (float)stream.ReceiveNext();
+        }
+    }
 }
