@@ -36,21 +36,23 @@ public class Player : MonoBehaviour, IPunObservable
     public static List<Transform> allBodies;
     List<Transform> bodiesFound;
 
+    [SerializeField] InputAction INTERACTION;
+    [SerializeField] InputAction MOUSE;
     [SerializeField] InputAction REPORT;
     [SerializeField] LayerMask ignoreForBody;
+    [SerializeField] LayerMask interactLayer;
 
     [SerializeField] Camera myCamera;
     [SerializeField] GameObject lightMask;
 
+    private Vector2 mousePositionInput;
     PhotonView _PV;
-
 
     private void Awake()
     {
         KILL.performed += KillTarget;
-
         REPORT.performed += ReportBody;
-
+        INTERACTION.performed += Interact;
     }
 
     private void Start()
@@ -60,7 +62,7 @@ public class Player : MonoBehaviour, IPunObservable
         if (myColor == Color.clear)
             myColor = Color.white;
 
-        if(_PV.IsMine)
+        if(_PV != null && _PV.IsMine)
         {
             _localPlayer = this;
         }
@@ -71,10 +73,10 @@ public class Player : MonoBehaviour, IPunObservable
             return;
         }
 
-        _playerSpriteRenderer.color = myColor;
-
         allBodies = new List<Transform>();
         bodiesFound = new List<Transform>();
+
+        _playerSpriteRenderer.color = myColor;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -110,18 +112,18 @@ public class Player : MonoBehaviour, IPunObservable
     {
         _input.Enable();
         KILL.Enable();
-
         REPORT.Enable();
-
+        MOUSE.Enable();
+        INTERACTION.Enable();
     }
 
     private void OnDisable()
     {
         _input.Disable();
         KILL.Disable();
-
         REPORT.Disable();
-
+        MOUSE.Disable();
+        INTERACTION.Disable();
     }
 
     public void SetRole(bool newRole)
@@ -161,7 +163,7 @@ public class Player : MonoBehaviour, IPunObservable
         isDead = true;
         _playerAnimator.SetBool("IsDead", isDead);
         _playerCollider.enabled = false;
-        gameObject.layer = 9;
+        gameObject.layer = 3;
 
         DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
@@ -215,7 +217,7 @@ public class Player : MonoBehaviour, IPunObservable
             _playerTransform.localScale = new Vector2(direction, 1);
         }
 
-        if (!_PV.IsMine)
+        if (_PV != null && !_PV.IsMine)
         {
             return;
         }
@@ -239,11 +241,12 @@ public class Player : MonoBehaviour, IPunObservable
           BodySearch();
         }
 
+        mousePositionInput = MOUSE.ReadValue<Vector2>();
     }
 
     private void FixedUpdate()
     {
-        if (!_PV.IsMine)
+        if (_PV != null && !_PV.IsMine)
         {
             return;
         }
@@ -279,6 +282,29 @@ public class Player : MonoBehaviour, IPunObservable
           }
         }
       }
+    }
+
+    private void Interact(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            Debug.Log("Here");
+            RaycastHit hit;
+            Ray ray = myCamera.ScreenPointToRay(mousePositionInput);
+            if(Physics.Raycast(ray, out hit, interactLayer))
+            {
+                if(hit.transform.tag == "Interactable")
+                {
+                    InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
+                    if (interactableObject.IsHighlightActive)
+                    {
+                        return;
+                    }
+
+                    interactableObject.PlayMiniGame(transform.position);
+                }
+            }
+        }
     }
 
     private void ReportBody(InputAction.CallbackContext obj)

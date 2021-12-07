@@ -7,11 +7,18 @@ public class InteractableObject : MonoBehaviour
     [SerializeField] GameObject miniGame;
     [SerializeField] GameObject highlight;
 
+    private bool isHighlightActive = false;
+    private bool isMinigameSpawned = false;
+
+    public bool IsHighlightActive => isHighlightActive;
+    public bool IsMinigameSpawned => isMinigameSpawned;
+
     public void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
             highlight.SetActive(true);
+            isHighlightActive = true;
         }
     }
 
@@ -20,11 +27,14 @@ public class InteractableObject : MonoBehaviour
         if (other.tag == "Player")
         {
             highlight.SetActive(false);
+            isHighlightActive = false;
         }
     }
 
-    public void PlayMiniGame()
+    public void PlayMiniGame(Vector3 playerPosition)
     {
-        miniGame.SetActive(true);
+        isMinigameSpawned = true;
+        Instantiate(miniGame, playerPosition, Quaternion.identity);
+        //miniGame.SetActive(true);
     }
 }

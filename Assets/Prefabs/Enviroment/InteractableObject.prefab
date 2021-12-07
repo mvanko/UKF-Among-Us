@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3334615285046304654}
   - component: {fileID: 3334615285046304653}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Highlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 3334615285801764275}
   - component: {fileID: 3334615285801764274}
   - component: {fileID: 3334615285801764286}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: InteractableObject
   m_TagString: Interactable
   m_Icon: {fileID: 0}
