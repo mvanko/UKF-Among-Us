@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RoomController : MonoBehaviourPunCallbacks
@@ -78,7 +79,13 @@ public class RoomController : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
         StartCoroutine(rejoinLobby());
+        //PhotonNetwork.LoadLevel(0);
+    }
+
+    public override void OnLeftRoom()
+    {
         PhotonNetwork.LoadLevel(0);
+        base.OnLeftRoom();
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)

@@ -17,6 +17,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     public InputField _uiRoomNameInput;
     public InputField _uiRoomSizeInput;
 
+    private bool joined = false;
     private string roomName;
     private int roomSize;
 
@@ -69,7 +70,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public void JoinLobbyOnClick()
     {
-        PhotonNetwork.JoinLobby();
+        if(PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer) PhotonNetwork.JoinLobby();
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -158,6 +159,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel(1);
+        if (!joined)
+        {
+            joined = true;
+            PhotonNetwork.LoadLevel(1);
+        }
     }
 }
