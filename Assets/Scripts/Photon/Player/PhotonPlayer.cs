@@ -34,13 +34,10 @@ public class PhotonPlayer : MonoBehaviour
         allPlayers = PhotonNetwork.PlayerList;
         foreach (Photon.Realtime.Player p in allPlayers)
         {
-            if (p != PhotonNetwork.LocalPlayer)
+            Debug.Log(p.ActorNumber);
+            if (p == PhotonNetwork.LocalPlayer && _myPV.IsMine)
             {
-                if (_myPV.IsMine)
-                {
-                    _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), GameManager.Instance.SpawnPoints[myNumber].position, Quaternion.identity);
-                    myNumber++;
-                }
+                _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), GameManager.Instance.SpawnPoints[p.ActorNumber].position, Quaternion.identity);
             }
         }
 
