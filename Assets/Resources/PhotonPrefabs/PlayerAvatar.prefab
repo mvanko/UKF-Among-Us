@@ -441,11 +441,19 @@ MonoBehaviour:
   INTERACTION:
     m_Name: INTERACTION
     m_Type: 0
-    m_ExpectedControlType: 
+    m_ExpectedControlType: Vector2
     m_Id: 5e492c20-bfb7-4de7-b005-e3422567d023
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 14cb316d-8f5a-4125-abbe-5d68cd6eb36a
+      m_Path: <Mouse>/position
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: INTERACTION
+      m_Flags: 0
   MOUSE:
     m_Name: MOUSE
     m_Type: 0
@@ -453,7 +461,15 @@ MonoBehaviour:
     m_Id: e84f42b9-64b7-4539-8a1c-ceee30c86b4d
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 92c17c1c-2335-4740-8a01-e7d412885782
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: MOUSE
+      m_Flags: 0
   REPORT:
     m_Name: REPORT
     m_Type: 0
