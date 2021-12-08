@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,11 +19,12 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        SpawnNewPlayer();
     }
 
-    //TODO
     public void SpawnNewPlayer()
     {
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), Vector3.zero, Quaternion.identity);
     }
 
     public void AddActivePlayer(Player player)

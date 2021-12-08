@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Multiplayer : MonoBehaviourPunCallbacks
+public class Multiplayer : MonoBehaviour
 {
     [SerializeField] private Button _uiBackButton;
-
-    private string roomName;
 
     private void OnEnable()
     {

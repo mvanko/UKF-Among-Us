@@ -687,12 +687,9 @@ MonoBehaviour:
   roomsContainer: {fileID: 786270578}
   roomListingPrefab: {fileID: 7311130184395275669, guid: 15eb016c0d9c9644e87b5a82cf256d4f,
     type: 3}
-  _uiCustomizeMenu: {fileID: 0}
   _uiJoinMultiplayerButton: {fileID: 504083915}
   _uiCreateRoomButton: {fileID: 1741525232}
   _uiChangeNameButton: {fileID: 452471757}
-  _uiCamera: {fileID: 0}
-  _uiMainCamera: {fileID: 519420031}
   _uiPlayerNameInput: {fileID: 1362473998}
   _uiRoomNameInput: {fileID: 665976202}
   _uiRoomSizeInput: {fileID: 604698254}
@@ -4448,12 +4445,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiSettings: {fileID: 243788158}
   _uiMultiplayer: {fileID: 546448527}
-  _uiCustomizeMenu: {fileID: 0}
   _uiStartButton: {fileID: 2005525509}
   _uiMultiplayerButton: {fileID: 504083915}
   _uiSettingsButton: {fileID: 614848482}
   _uiQuitButton: {fileID: 231183683}
-  _uiCustomizeButton: {fileID: 0}
 --- !u!1 &1222313940
 GameObject:
   m_ObjectHideFlags: 0
