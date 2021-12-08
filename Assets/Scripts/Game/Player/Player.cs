@@ -222,7 +222,7 @@ public class Player : MonoBehaviour, IPunObservable
     {
         if (SceneManager.GetActiveScene().name != "Waiting Room")
         {
-            _playerTransform.localScale = new Vector2(direction, 1);
+            //_playerTransform.localScale = new Vector2(direction, 1);
         }
 
         if (_PV != null && !_PV.IsMine)

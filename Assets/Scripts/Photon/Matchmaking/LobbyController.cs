@@ -17,6 +17,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     public InputField _uiRoomNameInput;
     public InputField _uiRoomSizeInput;
 
+    private bool connected = false;
     private bool joined = false;
     private string roomName;
     private int roomSize;
@@ -59,6 +60,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        connected = true;
     }
 
     public void PlayerNameUpdate()
@@ -123,6 +125,11 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
+        if(!connected)
+        {
+            return;
+        }
+
         roomName = _uiRoomNameInput.text.ToString();
 
         if (roomName == "")
@@ -148,7 +155,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         RoomOptions roomOps = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize };
         PhotonNetwork.CreateRoom(roomName, roomOps);
-
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
