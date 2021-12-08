@@ -66,11 +66,19 @@ public class Player : MonoBehaviour, IPunObservable
         {
             _localPlayer = this;
         }
-        else
+
+        if (_PV != null && !_PV.IsMine)
         {
             myCamera.gameObject.SetActive(false);
             lightMask.SetActive(false);
-            return;
+        }
+
+        if(SceneManager.GetActiveScene().name == "Waiting Room")
+        {
+            if (_PV != null && !_PV.IsMine)
+            {
+                _otherPlayer.gameObject.SetActive(false);
+            }
         }
 
         allBodies = new List<Transform>();
@@ -284,7 +292,7 @@ public class Player : MonoBehaviour, IPunObservable
       }
     }
 
-    private void Interact(InputAction.CallbackContext context)
+   private void Interact(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
         {

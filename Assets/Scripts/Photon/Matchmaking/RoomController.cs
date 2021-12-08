@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.IO;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        
         CreatePlayer();
         if (PhotonNetwork.IsMasterClient)
         {
@@ -70,8 +72,7 @@ public class RoomController : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.LoadLevel(LEVEL1);
-        }
-        
+        } 
     }
 
     public void LeaveGame()
@@ -79,7 +80,6 @@ public class RoomController : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
         StartCoroutine(rejoinLobby());
-        //PhotonNetwork.LoadLevel(0);
     }
 
     public override void OnLeftRoom()
@@ -90,6 +90,7 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
+        SetText();
         if (PhotonNetwork.IsMasterClient)
         {
             _uiStartGameButton.enabled = true;
