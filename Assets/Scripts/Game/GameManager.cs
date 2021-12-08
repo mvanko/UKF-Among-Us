@@ -7,12 +7,14 @@ using System.IO;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] GameData _gameData;
+    [SerializeField] private GameData _gameData;
+    [SerializeField] private Transform[] _levelSpawnPoints;
 
     private List<Player> _activePlayers = new List<Player>();
 
     public GameData GameData => _gameData;
     public PlayerData PlayerData => _gameData.playerData;
+    public Transform[] SpawnPoints => _levelSpawnPoints;
 
     public static GameManager Instance { get; private set; }
 

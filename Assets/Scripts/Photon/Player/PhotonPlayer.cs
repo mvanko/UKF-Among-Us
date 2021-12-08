@@ -11,17 +11,17 @@ public class PhotonPlayer : MonoBehaviour
     [SerializeField] private GameObject _playerPresence;
 
     Photon.Realtime.Player[] allPlayers;
-    int myNumber;
+    int myNumber = 0;
 
     private Vector3 _presencePosition;
 
     // Start is called before the first frame update
     void Start()
     {
-        if(SceneManager.GetActiveScene().name == "Waiting Room")
+        _myPV = GetComponent<PhotonView>();
+        if (SceneManager.GetActiveScene().name == "Waiting Room")
         {
             _presencePosition = _playerPresence.transform.position;
-            _myPV = GetComponent<PhotonView>();
             if (_myPV.IsMine)
             {
                 _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), _presencePosition, Quaternion.identity);
@@ -36,10 +36,13 @@ public class PhotonPlayer : MonoBehaviour
         {
             if (p != PhotonNetwork.LocalPlayer)
             {
-                myNumber++;
+                if (_myPV.IsMine)
+                {
+                    _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), GameManager.Instance.SpawnPoints[myNumber].position, Quaternion.identity);
+                    myNumber++;
+                }
             }
         }
-        
-        _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), LevelSpawnPionts.Instance.spawnPoints[myNumber].position, Quaternion.identity);
+
     }
 }
