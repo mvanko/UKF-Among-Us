@@ -77,29 +77,18 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        int tempIndex;
+        roomListing.Clear();
+
+        for(int i = roomsContainer.childCount-1; i >= 0; i--)
+        {
+            Destroy(roomsContainer.GetChild(i).gameObject);
+        }
 
         foreach (RoomInfo room in roomList)
         {
             Debug.Log(room);
-            if (roomListing != null)
-            {
-                tempIndex = roomListing.FindIndex(ByName(room.Name));
-            }
-            else
-            {
-                tempIndex = -1;
-            }
-
-            if (tempIndex!= -1)
-            {
-                roomListing.RemoveAt(tempIndex);
-                Destroy(roomsContainer.GetChild(tempIndex).gameObject);
-            }
-
             if(room.PlayerCount > 0)
             {
-                roomListing.Add(room);
                 ListRoom(room);
             }
         }
@@ -120,6 +109,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
             GameObject tempListing = Instantiate(roomListingPrefab, roomsContainer);
             RoomButton tempButton = tempListing.GetComponent<RoomButton>();
             tempButton.SetRoom(room.Name, room.MaxPlayers, room.PlayerCount);
+            roomListing.Add(room);
         }
     }
 
@@ -153,7 +143,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
             roomSize = 10;
         }
 
-        RoomOptions roomOps = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize };
+        RoomOptions roomOps = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize, PlayerTtl = 0 };
         PhotonNetwork.CreateRoom(roomName, roomOps);
     }
 

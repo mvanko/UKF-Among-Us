@@ -16,6 +16,7 @@ public class RoomButton : MonoBehaviourPunCallbacks
     private int roomSize;
     private int playerCount;
 
+    private bool clicked = false;
     public override void OnEnable()
     {
         _uiJoinButton.onClick.AddListener(JoinRoomOnClick);
@@ -28,7 +29,11 @@ public class RoomButton : MonoBehaviourPunCallbacks
 
     public void JoinRoomOnClick()
     {
-        PhotonNetwork.JoinRoom(roomName);
+        if (!clicked)
+        {
+            clicked = true;
+            PhotonNetwork.JoinRoom(roomName);
+        }
     }
 
     public void SetRoom(string nameInput, int sizeInput, int countInput)

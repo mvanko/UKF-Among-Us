@@ -26,6 +26,7 @@ public class PhotonPlayer : MonoBehaviour
             {
                 _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), _presencePosition, Quaternion.identity);
                 _playerAvatar.transform.localScale += new Vector3(20f, 20f, 0f);
+                return;
             }
             return;
         }
@@ -38,6 +39,7 @@ public class PhotonPlayer : MonoBehaviour
                 myNumber++;
             }
         }
-         _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), LevelSpawnPionts.Instance.spawnPoints[myNumber].position, Quaternion.identity);
+        
+        _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), LevelSpawnPionts.Instance.spawnPoints[myNumber].position, Quaternion.identity);
     }
 }

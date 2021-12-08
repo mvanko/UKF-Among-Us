@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class Multiplayer : MonoBehaviour
 
     private void BackToMenu()
     {
-        PhotonNetwork.LeaveLobby();
+        if (PhotonNetwork.NetworkClientState == ClientState.JoinedLobby) PhotonNetwork.LeaveLobby();
         this.gameObject.SetActive(false);
     }
 }
