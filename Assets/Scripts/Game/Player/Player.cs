@@ -49,6 +49,8 @@ public class Player : MonoBehaviour, IPunObservable
     private Vector2 mousePositionInput;
     PhotonView _PV;
 
+    private InteractableObject activeInteractableObject;
+
     private void Awake()
     {
         KILL.performed += KillTarget;
@@ -218,12 +220,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name != "Waiting Room")
-        {
-            //_playerTransform.localScale = new Vector2(direction, 1);
-        }
-
-        if (_PV != null && !_PV.IsMine)
+        if (_PV != null && !_PV.IsMine || activeInteractableObject != null)
         {
             return;
         }
@@ -288,7 +285,7 @@ public class Player : MonoBehaviour, IPunObservable
 
    private void Interact(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (activeInteractableObject == null && context.phase == InputActionPhase.Performed)
         {
             RaycastHit hit;
             Ray ray = myCamera.ScreenPointToRay(mousePositionInput);
@@ -297,15 +294,16 @@ public class Player : MonoBehaviour, IPunObservable
                 if(hit.transform.tag == "Interactable")
                 {
                     InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
-                    if (interactableObject.IsMinigameSpawned)
-                    {
-                        return;
-                    }
-
-                    interactableObject.PlayMiniGame(transform.position);
+                    activeInteractableObject = interactableObject;
+                    interactableObject.PlayMiniGame(transform.position, () => { MiniGameClosed(); });
                 }
             }
         }
+    }
+
+    private void MiniGameClosed()
+    {
+        activeInteractableObject = null;
     }
 
     private void ReportBody(InputAction.CallbackContext obj)
