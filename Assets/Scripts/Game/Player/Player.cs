@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class Player : MonoBehaviour, IPunObservable
 {
@@ -48,8 +49,6 @@ public class Player : MonoBehaviour, IPunObservable
 
     private Vector2 mousePositionInput;
     PhotonView _PV;
-
-    private InteractableObject activeInteractableObject;
 
     private void Awake()
     {
@@ -150,6 +149,12 @@ public class Player : MonoBehaviour, IPunObservable
 
     void KillTarget(InputAction.CallbackContext context)
     {
+
+        if (!_PV.IsMine | !_isImposter)
+        {
+            return;
+        }
+
         if (context.phase == InputActionPhase.Performed)
         {
             if (targets.Count == 0)
@@ -160,20 +165,33 @@ public class Player : MonoBehaviour, IPunObservable
                 if (target.isDead)
                     return;
                 _playerTransform.position = target._playerTransform.position;
-                target.Die();
+                //target.Die();
+                target._PV.RPC("RPC_Kill", RpcTarget.All);
                 targets.Remove(target);
             }
         }
     }
 
+    [PunRPC]
+    void RPC_Kill()
+    {
+        Die();
+    }
+
     public void Die()
     {
+        if (!_PV.IsMine)
+        {
+            return;
+        }
+
         isDead = true;
         _playerAnimator.SetBool("IsDead", isDead);
         _playerCollider.enabled = false;
         gameObject.layer = 3;
 
-        DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
+        //DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
+        DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs","DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
     }
 
@@ -220,7 +238,8 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Update()
     {
-        if (_PV != null && !_PV.IsMine || activeInteractableObject != null)
+
+        if (_PV != null && !_PV.IsMine)
         {
             return;
         }
@@ -285,7 +304,7 @@ public class Player : MonoBehaviour, IPunObservable
 
    private void Interact(InputAction.CallbackContext context)
     {
-        if (activeInteractableObject == null && context.phase == InputActionPhase.Performed)
+        if (context.phase == InputActionPhase.Performed)
         {
             RaycastHit hit;
             Ray ray = myCamera.ScreenPointToRay(mousePositionInput);
@@ -294,16 +313,15 @@ public class Player : MonoBehaviour, IPunObservable
                 if(hit.transform.tag == "Interactable")
                 {
                     InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
-                    activeInteractableObject = interactableObject;
-                    interactableObject.PlayMiniGame(transform.position, () => { MiniGameClosed(); });
+                    if (interactableObject.IsMinigameSpawned)
+                    {
+                        return;
+                    }
+
+                    interactableObject.PlayMiniGame(transform.position);
                 }
             }
         }
-    }
-
-    private void MiniGameClosed()
-    {
-        activeInteractableObject = null;
     }
 
     private void ReportBody(InputAction.CallbackContext obj)
