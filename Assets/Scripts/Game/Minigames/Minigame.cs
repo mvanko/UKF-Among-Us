@@ -15,12 +15,12 @@ public abstract class Minigame : MonoBehaviour
         _callback = OnCloseCallback;
     }
 
-    private void OnEnable()
+    internal void OnEnable()
     {
         _closeButton.onClick.AddListener(CloseMinigame);
     }
 
-    private void OnDisable()
+    internal void OnDisable()
     {
         _closeButton.onClick.RemoveListener(CloseMinigame);
     }

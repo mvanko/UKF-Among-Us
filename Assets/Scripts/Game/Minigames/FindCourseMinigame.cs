@@ -26,8 +26,9 @@ public class FindCourseMinigame : Minigame
 
     }
 
-    private void OnEnable()
+    private void OnEnable() 
     {
+        base.OnEnable();
         for (int i = 0; i < myObjects.Length; i++)
         {
             myObjects[i].GetComponentInChildren<Text>().text = Kurzy[i].ToString();
