@@ -8,22 +8,33 @@ using UnityEngine.UI;
 
 public class RoomController : MonoBehaviourPunCallbacks
 {
+    PhotonView _PV;
+
     [SerializeField] Text _uiRoomNameText;
     [SerializeField] Text _uiRoomSizeText;
+    [SerializeField] Text _uiCountdownText;
+    [SerializeField] GameObject _uiGameStartObject;
+    [SerializeField] GameObject _uiGameStartTimerObject;
     [SerializeField] Button _uiStartGameButton;
     [SerializeField] Button _uiLeaveGameButton;
 
     private const int LEVEL1 = 2;
     private const int LEVEL0 = 0;
 
+    private bool startCountdown = false;
+    private float timeToStart;
+
     private void Start()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
-        
+        _PV = GetComponent<PhotonView>();
+
+        timeToStart = 6;
+
         CreatePlayer();
+
         if (PhotonNetwork.IsMasterClient)
         {
-            _uiStartGameButton.onClick.AddListener(StartGame);
+            _uiStartGameButton.onClick.AddListener(StartCountdown);
             _uiStartGameButton.enabled = true;
         }
         else
@@ -62,17 +73,26 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     void CreatePlayer()
     {
-       Vector3 _roomPosition = new Vector3(531f, 575f, 0f);
-       PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), _roomPosition, Quaternion.identity);
+        Vector3 _roomPosition = new Vector3(531f, 575f, 0f);
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), _roomPosition, Quaternion.identity);
+    }
+
+    public void StartCountdown()
+    { 
+        _PV.RPC("Countdown", RpcTarget.All);   
+    }
+
+    [PunRPC]
+    void Countdown()
+    {
+        startCountdown = !startCountdown;
+        _uiGameStartTimerObject.SetActive(true);
     }
 
     public void StartGame()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.LoadLevel(LEVEL1);
-        } 
+    { 
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.LoadLevel(LEVEL1);
     }
 
     public void LeaveGame()
@@ -91,9 +111,30 @@ public class RoomController : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         SetText();
+
         if (PhotonNetwork.IsMasterClient)
         {
+            _uiStartGameButton.onClick.AddListener(StartCountdown);
             _uiStartGameButton.enabled = true;
+        }
+    }
+
+    private void Update()
+    {
+        _uiGameStartObject.SetActive(PhotonNetwork.IsMasterClient);
+
+        if (startCountdown)
+        {
+            timeToStart -= Time.deltaTime;
+            _uiCountdownText.text = ((int)timeToStart).ToString();
+        }
+
+        if (timeToStart <= 0)
+        {
+            _uiCountdownText.enabled = false;
+            timeToStart = 999;
+            PhotonNetwork.AutomaticallySyncScene = true;
+            StartGame();
         }
     }
 

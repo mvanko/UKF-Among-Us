@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class Player : MonoBehaviour, IPunObservable
 {
@@ -148,6 +149,12 @@ public class Player : MonoBehaviour, IPunObservable
 
     void KillTarget(InputAction.CallbackContext context)
     {
+
+        if (!_PV.IsMine | !_isImposter)
+        {
+            return;
+        }
+
         if (context.phase == InputActionPhase.Performed)
         {
             if (targets.Count == 0)
@@ -158,20 +165,33 @@ public class Player : MonoBehaviour, IPunObservable
                 if (target.isDead)
                     return;
                 _playerTransform.position = target._playerTransform.position;
-                target.Die();
+                //target.Die();
+                target._PV.RPC("RPC_Kill", RpcTarget.All);
                 targets.Remove(target);
             }
         }
     }
 
+    [PunRPC]
+    void RPC_Kill()
+    {
+        Die();
+    }
+
     public void Die()
     {
+        if (!_PV.IsMine)
+        {
+            return;
+        }
+
         isDead = true;
         _playerAnimator.SetBool("IsDead", isDead);
         _playerCollider.enabled = false;
         gameObject.layer = 3;
 
-        DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
+        //DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
+        DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs","DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
     }
 
@@ -218,10 +238,6 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name != "Waiting Room")
-        {
-            //_playerTransform.localScale = new Vector2(direction, 1);
-        }
 
         if (_PV != null && !_PV.IsMine)
         {
