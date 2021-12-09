@@ -51,25 +51,37 @@ public class Player : MonoBehaviour, IPunObservable
     PhotonView _PV;
 
     private InteractableObject activeInteractableObject;
+    private bool killAvailable = false;
+    private bool reportAvailable = false;
+
+    public bool IsImposter => _isImposter;
+    public bool KillAvailable => killAvailable;
+    public bool ReportAvailable => reportAvailable;
+
+    public static event Action OnPlayerReady;
+
+    public event Action<bool> OnKillAvailable;
+    public event Action<bool> OnReportAvailable;
 
     private void Awake()
     {
         KILL.performed += KillTarget;
         REPORT.performed += ReportBody;
         INTERACTION.performed += Interact;
+
+        _PV = GetComponent<PhotonView>();
+
+        if (_PV != null && _PV.IsMine)
+        {
+            _localPlayer = this;
+            OnPlayerReady?.Invoke();
+        }
     }
 
     private void Start()
     {
-        _PV = GetComponent<PhotonView>();
-
         if (myColor == Color.clear)
             myColor = Color.white;
-
-        if(_PV != null && _PV.IsMine)
-        {
-            _localPlayer = this;
-        }
 
         if (_PV != null && !_PV.IsMine)
         {
@@ -77,7 +89,7 @@ public class Player : MonoBehaviour, IPunObservable
             lightMask.SetActive(false);
         }
 
-        if(SceneManager.GetActiveScene().name == "Waiting Room")
+        if (SceneManager.GetActiveScene().name == "Waiting Room")
         {
             if (_PV != null && !_PV.IsMine)
             {
@@ -99,6 +111,12 @@ public class Player : MonoBehaviour, IPunObservable
                     return;
                 else
                 {
+                    if (this == _localPlayer && !killAvailable)
+                    {
+                        killAvailable = true;
+                        OnKillAvailable?.Invoke(true);
+                    }
+
                     targets.Add(tempTarget);
                 }
             }
@@ -110,9 +128,15 @@ public class Player : MonoBehaviour, IPunObservable
         if (other.tag == "Player")
         {
             Player tempTarget = other.GetComponent<Player>();
-            if(targets.Contains(tempTarget))
+            if (targets.Contains(tempTarget))
             {
                 targets.Remove(tempTarget);
+            }
+
+            if (this == _localPlayer && targets.Count == 0 && killAvailable)
+            {
+                killAvailable = false;
+                OnKillAvailable?.Invoke(false);
             }
         }
     }
@@ -193,7 +217,7 @@ public class Player : MonoBehaviour, IPunObservable
         gameObject.layer = 3;
 
         //DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
-        DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs","DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
+        DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
     }
 
@@ -232,7 +256,7 @@ public class Player : MonoBehaviour, IPunObservable
                 _playerAnimator.SetBool("Backwards", true);
             }
         }
-        else if(newMovementInput.magnitude == 0)
+        else if (newMovementInput.magnitude == 0)
         {
             _playerAnimator.SetBool("Idle", true);
         }
@@ -260,9 +284,9 @@ public class Player : MonoBehaviour, IPunObservable
             direction = Mathf.Sign(currentInput.x);
         }
 
-        if(allBodies.Count > 0)
+        if (allBodies.Count > 0)
         {
-          BodySearch();
+            BodySearch();
         }
 
         mousePositionInput = MOUSE.ReadValue<Vector2>();
@@ -281,38 +305,49 @@ public class Player : MonoBehaviour, IPunObservable
 
     void BodySearch()
     {
-      foreach(Transform body in allBodies)
-      {
-        RaycastHit hit;
-        Ray ray = new Ray(transform.position, body.position - transform.position);
-        Debug.DrawRay(transform.position, body.position - transform.position, Color.cyan);
-        if(Physics.Raycast(ray, out hit, 1000f, ~ignoreForBody))
+        if (_PV.IsMine && !reportAvailable && bodiesFound.Count > 0)
         {
-          if(hit.transform == body)
-          {
-            if(bodiesFound.Contains(body.transform))
-            {
-              return;
-            }
-            bodiesFound.Add(body.transform);
-          }
-          else
-          {
-            bodiesFound.Remove(body.transform);
-          }
+            reportAvailable = true;
+            OnReportAvailable?.Invoke(true);
         }
-      }
+        else if (_PV.IsMine && reportAvailable && bodiesFound.Count == 0)
+        {
+            reportAvailable = false;
+            OnReportAvailable?.Invoke(false);
+        }
+
+        foreach (Transform body in allBodies)
+        {
+            RaycastHit hit;
+            Ray ray = new Ray(transform.position, body.position - transform.position);
+            Debug.DrawRay(transform.position, body.position - transform.position, Color.cyan);
+            if (Physics.Raycast(ray, out hit, 500f, ~ignoreForBody))
+            {
+                if (hit.transform == body)
+                {
+                    if (bodiesFound.Contains(body.transform))
+                    {
+                        return;
+                    }
+                    bodiesFound.Add(body.transform);
+                }
+                else
+                {
+                    bodiesFound.Remove(body.transform);
+                }
+            }
+        }
     }
 
-   private void Interact(InputAction.CallbackContext context)
+    private void Interact(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
         {
             RaycastHit hit;
             Ray ray = myCamera.ScreenPointToRay(mousePositionInput);
-            if(Physics.Raycast(ray, out hit, interactLayer))
+            if (Physics.Raycast(ray, out hit, interactLayer))
             {
-                if(hit.transform.tag == "Interactable")
+                if (hit.transform.tag == "Interactable")
                 {
                     InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
                     if (interactableObject.IsMinigameSpawned)
@@ -333,18 +368,18 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void ReportBody(InputAction.CallbackContext obj)
     {
-      if(bodiesFound == null)
-      {
-        return;
-      }
-      if(bodiesFound.Count == 0)
-      {
-        return;
-      }
-      Transform tempBody = bodiesFound[bodiesFound.Count -1];
-      allBodies.Remove(tempBody);
-      bodiesFound.Remove(tempBody);
-      tempBody.GetComponent<DeadBody>().Report();
+        if (bodiesFound == null)
+        {
+            return;
+        }
+        if (bodiesFound.Count == 0)
+        {
+            return;
+        }
+        Transform tempBody = bodiesFound[bodiesFound.Count - 1];
+        allBodies.Remove(tempBody);
+        bodiesFound.Remove(tempBody);
+        tempBody.GetComponent<DeadBody>().Report();
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
