@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 456430111}
   - component: {fileID: 456430110}
   - component: {fileID: 7656023952692144151}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7396340715710174810}
   - component: {fileID: 8537613617338883611}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211,7 +211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7921510726998529050}
   - component: {fileID: 4161972761365790994}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 3117795870034993336}
   - component: {fileID: 8007782247390794474}
   - component: {fileID: 1090756354090350240}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -542,7 +542,7 @@ GameObject:
   - component: {fileID: 3633558430410158058}
   - component: {fileID: 1563221391166452237}
   - component: {fileID: 1295760651876125556}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}

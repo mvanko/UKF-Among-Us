@@ -290,7 +290,6 @@ public class Player : MonoBehaviour, IPunObservable
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            Debug.Log("Here");
             RaycastHit hit;
             Ray ray = myCamera.ScreenPointToRay(mousePositionInput);
             if(Physics.Raycast(ray, out hit, interactLayer))
@@ -298,7 +297,7 @@ public class Player : MonoBehaviour, IPunObservable
                 if(hit.transform.tag == "Interactable")
                 {
                     InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
-                    if (interactableObject.IsHighlightActive)
+                    if (interactableObject.IsMinigameSpawned)
                     {
                         return;
                     }
