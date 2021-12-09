@@ -10,14 +10,17 @@ public class InteractableObject : MonoBehaviour
 
     private bool isMinigameCompleted = false;
     private bool isMinigameSpawned = false;
+    private bool isHighlighted = false;
     public bool IsMinigameSpawned => isMinigameSpawned;
     public bool IsMinigameCompleted => isMinigameCompleted;
+    public bool IsHighlighted => isHighlighted;
 
     public void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player" && !isMinigameCompleted)
         {
             highlight.SetActive(true);
+            isHighlighted = true;
         }
     }
 
@@ -26,6 +29,7 @@ public class InteractableObject : MonoBehaviour
         if (other.tag == "Player" && !isMinigameCompleted)
         {
             highlight.SetActive(false);
+            isHighlighted = false;
         }
     }
 
@@ -39,6 +43,7 @@ public class InteractableObject : MonoBehaviour
     {
         isMinigameSpawned = false;
         isMinigameCompleted = true;
+        isHighlighted = false;
         highlight.SetActive(false);
         player.MiniGameWon();
     }

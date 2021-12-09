@@ -27,13 +27,13 @@ public abstract class Minigame : MonoBehaviour
         _closeButton.onClick.RemoveListener(CloseMinigame);
     }
 
-    public void CloseMinigame()
+    internal void CloseMinigame()
     {
         Destroy(this.gameObject);
         _callbackClose?.Invoke();
     }
 
-    public void WinMinigame()
+    internal void WinMinigame()
     {
         Destroy(this.gameObject);
         _callbackWin?.Invoke();

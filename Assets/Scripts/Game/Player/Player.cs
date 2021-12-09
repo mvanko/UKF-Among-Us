@@ -350,7 +350,7 @@ public class Player : MonoBehaviour, IPunObservable
                 if (hit.transform.tag == "Interactable")
                 {
                     InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
-                    if (interactableObject.IsMinigameSpawned || interactableObject.IsMinigameCompleted)
+                    if (!interactableObject.IsHighlighted || interactableObject.IsMinigameSpawned || interactableObject.IsMinigameCompleted)
                     {
                         return;
                     }

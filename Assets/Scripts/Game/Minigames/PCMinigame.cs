@@ -66,36 +66,26 @@ public class PCMinigame : Minigame
     {
         yield return new WaitForSeconds(0.5f);
 
-        if(currentText == correctText)
+        bool win = currentText == correctText;
+
+        for (int i = middlePanelFirstRow.childCount - 1; i >= 0; i--)
         {
-            for (int i = middlePanelFirstRow.childCount - 1; i >= 0; i--)
-            {
-                middlePanelFirstRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = Color.green;
-            }
+            middlePanelFirstRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = win ? Color.green : Color.red;
+        }
 
-            for (int i = middlePanelSecondRow.childCount - 1; i >= 0; i--)
-            {
-                middlePanelSecondRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = Color.green;
-            }
+        for (int i = middlePanelSecondRow.childCount - 1; i >= 0; i--)
+        {
+            middlePanelSecondRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = win ? Color.green : Color.red;
+        }
 
-            yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f);
 
+        if (win)
+        {
             WinMinigame();
         }
         else
         {
-            for (int i = middlePanelFirstRow.childCount - 1; i >= 0; i--)
-            {
-                middlePanelFirstRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = Color.red;
-            }
-
-            for (int i = middlePanelSecondRow.childCount - 1; i >= 0; i--)
-            {
-                middlePanelSecondRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = Color.red;
-            }
-
-            yield return new WaitForSeconds(1f);
-
             Clear();
         }
 
