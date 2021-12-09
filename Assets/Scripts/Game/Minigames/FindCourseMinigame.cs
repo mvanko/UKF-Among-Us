@@ -98,7 +98,7 @@ public class FindCourseMinigame : Minigame
 
         if (clicked_button.Equals(find_lekc))
         {
-            CloseMinigame();
+            WinMinigame();
         }
     }
 

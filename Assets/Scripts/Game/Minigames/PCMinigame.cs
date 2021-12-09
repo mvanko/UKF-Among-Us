@@ -20,9 +20,14 @@ public class PCMinigame : Minigame
     private void OnEnable()
     {
         base.OnEnable();
+        Clear();
+    }
+
+    private void Clear()
+    {
         currentText = string.Empty;
 
-        for (int i = middlePanelFirstRow.childCount-1; i >= 0; i--)
+        for (int i = middlePanelFirstRow.childCount - 1; i >= 0; i--)
         {
             Destroy(middlePanelFirstRow.GetChild(i).gameObject);
         }
@@ -34,9 +39,12 @@ public class PCMinigame : Minigame
 
         for (int i = bottomPanel.childCount - 1; i >= 0; i--)
         {
-            Transform child = bottomPanel.GetChild(i);
-            child.SetSiblingIndex(Random.Range(0, bottomPanel.childCount - 1));
-            child.gameObject.SetActive(true);
+            bottomPanel.GetChild(i).SetSiblingIndex(Random.Range(0, bottomPanel.childCount - 1));
+        }
+
+        for (int i = bottomPanel.childCount - 1; i >= 0; i--)
+        {
+            bottomPanel.GetChild(i).gameObject.SetActive(true);
         }
     }
 
@@ -60,8 +68,6 @@ public class PCMinigame : Minigame
 
         if(currentText == correctText)
         {
-            Debug.Log("WIN!");
-
             for (int i = middlePanelFirstRow.childCount - 1; i >= 0; i--)
             {
                 middlePanelFirstRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = Color.green;
@@ -78,8 +84,6 @@ public class PCMinigame : Minigame
         }
         else
         {
-            Debug.Log("LOSE!");
-
             for (int i = middlePanelFirstRow.childCount - 1; i >= 0; i--)
             {
                 middlePanelFirstRow.GetChild(i).gameObject.GetComponent<TextMeshProUGUI>().color = Color.red;
@@ -92,7 +96,7 @@ public class PCMinigame : Minigame
 
             yield return new WaitForSeconds(1f);
 
-            CloseMinigame();
+            Clear();
         }
 
         yield return null;
