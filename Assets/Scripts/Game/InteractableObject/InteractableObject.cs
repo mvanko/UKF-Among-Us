@@ -27,15 +27,15 @@ public class InteractableObject : MonoBehaviour
         }
     }
 
-    private void MinigameClosed(Action callback)
+    private void MinigameClosed(Player player)
     {
         isMinigameSpawned = false;
-        callback?.Invoke();
+        player.MiniGameClosed();
     }
 
-    public void PlayMiniGame(Vector3 playerPosition, Action closeCallback)
+    public void PlayMiniGame(Player player)
     {
         isMinigameSpawned = true;
-        Instantiate(miniGame, playerPosition, Quaternion.identity).Setup(() => { MinigameClosed(closeCallback); });
+        Instantiate(miniGame, player.transform.position, Quaternion.identity).Setup(() => { MinigameClosed(player); });
     }
 }

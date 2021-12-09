@@ -50,6 +50,8 @@ public class Player : MonoBehaviour, IPunObservable
     private Vector2 mousePositionInput;
     PhotonView _PV;
 
+    private InteractableObject activeInteractableObject;
+
     private void Awake()
     {
         KILL.performed += KillTarget;
@@ -239,7 +241,7 @@ public class Player : MonoBehaviour, IPunObservable
     private void Update()
     {
 
-        if (_PV != null && !_PV.IsMine)
+        if (_PV != null && !_PV.IsMine || activeInteractableObject != null)
         {
             return;
         }
@@ -317,11 +319,16 @@ public class Player : MonoBehaviour, IPunObservable
                     {
                         return;
                     }
-
-                    interactableObject.PlayMiniGame(transform.position);
+                    activeInteractableObject = interactableObject;
+                    interactableObject.PlayMiniGame(this);
                 }
             }
         }
+    }
+
+    public void MiniGameClosed()
+    {
+        activeInteractableObject = null;
     }
 
     private void ReportBody(InputAction.CallbackContext obj)
