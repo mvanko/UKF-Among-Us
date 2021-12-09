@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,8 +34,8 @@ public class Player : MonoBehaviour, IPunObservable
 
     public static Player LocalPlayer => _localPlayer;
 
-    public static List<Transform> allBodies;
-    List<Transform> bodiesFound;
+    public static List<Transform> allBodies = new List<Transform>();
+    List<Transform> bodiesFound = new List<Transform>();
 
     [SerializeField] InputAction INTERACTION;
     [SerializeField] InputAction MOUSE;
@@ -80,9 +81,6 @@ public class Player : MonoBehaviour, IPunObservable
                 _otherPlayer.gameObject.SetActive(false);
             }
         }
-
-        allBodies = new List<Transform>();
-        bodiesFound = new List<Transform>();
 
         _playerSpriteRenderer.color = myColor;
     }
@@ -254,11 +252,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void FixedUpdate()
     {
-        if (_PV != null && !_PV.IsMine)
-        {
-            return;
-        }
-        if (SceneManager.GetActiveScene().name == "Waiting Room")
+        if (_PV != null && !_PV.IsMine || SceneManager.GetActiveScene().name == "Waiting Room")
         {
             return;
         }
