@@ -1,16 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
 {
-    [SerializeField] GameObject miniGame;
-    [SerializeField] GameObject highlight;
+    [SerializeField] private Minigame miniGame;
+    [SerializeField] private GameObject highlight;
 
-    private bool isHighlightActive = false;
     private bool isMinigameSpawned = false;
-
-    public bool IsHighlightActive => isHighlightActive;
     public bool IsMinigameSpawned => isMinigameSpawned;
 
     public void OnTriggerEnter(Collider other)
@@ -18,7 +16,6 @@ public class InteractableObject : MonoBehaviour
         if(other.tag == "Player")
         {
             highlight.SetActive(true);
-            isHighlightActive = true;
         }
     }
 
@@ -27,14 +24,17 @@ public class InteractableObject : MonoBehaviour
         if (other.tag == "Player")
         {
             highlight.SetActive(false);
-            isHighlightActive = false;
         }
+    }
+
+    private void MinigameClosed()
+    {
+        isMinigameSpawned = false;
     }
 
     public void PlayMiniGame(Vector3 playerPosition)
     {
         isMinigameSpawned = true;
-        Instantiate(miniGame, playerPosition, Quaternion.identity);
-        //miniGame.SetActive(true);
+        Instantiate(miniGame, playerPosition, Quaternion.identity).Setup(() => { MinigameClosed(); });
     }
 }
