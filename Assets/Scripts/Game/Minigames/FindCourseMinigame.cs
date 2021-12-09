@@ -40,16 +40,6 @@ public class FindCourseMinigame : Minigame
         Debug.Log("RANDOM KURZ " + find_kurz);
     }
 
-    public void PanelClose()
-    {
-        GamePanel.SetActive(false);
-    }
-
-    public void PanelOpen()
-    {
-        GamePanel.SetActive(true);
-    }
-
     IEnumerator WrongAnswer(int button)
     {
 
@@ -108,7 +98,7 @@ public class FindCourseMinigame : Minigame
 
         if (clicked_button.Equals(find_lekc))
         {
-            PanelClose();
+            CloseMinigame();
         }
     }
 
