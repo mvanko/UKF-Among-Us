@@ -15,21 +15,25 @@ public class InteractableObject : MonoBehaviour
     public bool IsMinigameCompleted => isMinigameCompleted;
     public bool IsHighlighted => isHighlighted;
 
+    public static event Action<InteractableObject> OnHighlighted;
+
     public void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player" && !isMinigameCompleted)
+        if(other.tag == "Player" && !isMinigameCompleted && other.GetComponent<Player>() == Player.LocalPlayer)
         {
             highlight.SetActive(true);
             isHighlighted = true;
+            OnHighlighted?.Invoke(this);
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player" && !isMinigameCompleted)
+        if (other.tag == "Player" && !isMinigameCompleted && other.GetComponent<Player>() == Player.LocalPlayer)
         {
             highlight.SetActive(false);
             isHighlighted = false;
+            OnHighlighted?.Invoke(null);
         }
     }
 

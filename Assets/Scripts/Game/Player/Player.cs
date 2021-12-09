@@ -50,18 +50,22 @@ public class Player : MonoBehaviour, IPunObservable
     private Vector2 mousePositionInput;
     PhotonView _PV;
 
+    private InteractableObject highlightedInteractableObject;
     private InteractableObject activeInteractableObject;
     private bool killAvailable = false;
     private bool reportAvailable = false;
+    private bool useAvailable = false;
 
     public bool IsImposter => _isImposter;
     public bool KillAvailable => killAvailable;
+    public bool UseAvailable => useAvailable;
     public bool ReportAvailable => reportAvailable;
 
     public static event Action OnPlayerReady;
 
     public event Action<bool> OnKillAvailable;
     public event Action<bool> OnReportAvailable;
+    public event Action<bool> OnUseAvailable;
 
     private void Awake()
     {
@@ -74,7 +78,16 @@ public class Player : MonoBehaviour, IPunObservable
         if (_PV != null && _PV.IsMine)
         {
             _localPlayer = this;
+            InteractableObject.OnHighlighted += UpdateInteractableHighlighted;
             OnPlayerReady?.Invoke();
+        }
+    }
+
+    void OnDestroy()
+    {
+        if(this == LocalPlayer)
+        {
+            InteractableObject.OnHighlighted -= UpdateInteractableHighlighted;
         }
     }
 
@@ -343,22 +356,19 @@ public class Player : MonoBehaviour, IPunObservable
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            RaycastHit hit;
-            Ray ray = myCamera.ScreenPointToRay(mousePositionInput);
-            if (Physics.Raycast(ray, out hit, interactLayer))
+            if (highlightedInteractableObject != null && activeInteractableObject == null)
             {
-                if (hit.transform.tag == "Interactable")
-                {
-                    InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
-                    if (!interactableObject.IsHighlighted || interactableObject.IsMinigameSpawned || interactableObject.IsMinigameCompleted)
-                    {
-                        return;
-                    }
-                    activeInteractableObject = interactableObject;
-                    interactableObject.PlayMiniGame(this);
-                }
+                activeInteractableObject = highlightedInteractableObject;
+                activeInteractableObject.PlayMiniGame(this);
             }
         }
+    }
+
+    private void UpdateInteractableHighlighted(InteractableObject interactableObject)
+    {
+        highlightedInteractableObject = interactableObject;
+        useAvailable = highlightedInteractableObject != null;
+        OnUseAvailable?.Invoke(useAvailable);
     }
 
     public void MiniGameClosed()
