@@ -8,11 +8,13 @@ public abstract class Minigame : MonoBehaviour
 {
     [SerializeField] private Button _closeButton;
 
-    private event Action _callback;
-    
-    public void Setup(Action OnCloseCallback)
+    private event Action _callbackClose;
+    private event Action _callbackWin;
+
+    public void Setup(Action OnCloseCallback, Action OnWinCallback)
     {
-        _callback = OnCloseCallback;
+        _callbackClose = OnCloseCallback;
+        _callbackWin = OnWinCallback;
     }
 
     internal void OnEnable()
@@ -28,6 +30,12 @@ public abstract class Minigame : MonoBehaviour
     public void CloseMinigame()
     {
         Destroy(this.gameObject);
-        _callback?.Invoke();
+        _callbackClose?.Invoke();
+    }
+
+    public void WinMinigame()
+    {
+        Destroy(this.gameObject);
+        _callbackWin?.Invoke();
     }
 }
