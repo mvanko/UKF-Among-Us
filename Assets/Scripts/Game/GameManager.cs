@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using Photon.Realtime;
 using System.IO;
 
 public class GameManager : MonoBehaviour
@@ -12,8 +11,6 @@ public class GameManager : MonoBehaviour
 
     private List<Player> _activePlayers = new List<Player>();
 
-    private Player playerInstance = new Player();
-
     public GameData GameData => _gameData;
     public PlayerData PlayerData => _gameData.playerData;
     public Transform[] SpawnPoints => _levelSpawnPoints;
@@ -22,9 +19,7 @@ public class GameManager : MonoBehaviour
 
     private PhotonView _myPV;
 
-    private int impostorNo1;
-    private int impostorNo2;
-    private int impostorNo3;
+    private int impostorNo1, impostorNo2, impostorNo3;
 
     private void Awake()
     {
@@ -84,13 +79,12 @@ public class GameManager : MonoBehaviour
             }
         }
         _myPV.RPC("RPC_SyncBully", RpcTarget.All, impostorNo1, impostorNo2, impostorNo3);
-        Debug.Log("Sending RPC: " + impostorNo1 +  " " + impostorNo2 +" " + impostorNo3);
     }
 
     [PunRPC]
     void RPC_SyncBully(int bullyNo1, int bullyNo2, int bullyNo3)
     {
-            playerInstance.SetRole(bullyNo1, bullyNo2, bullyNo3);
+            Player.LocalPlayer.SetRole(bullyNo1, bullyNo2, bullyNo3);
     }
 
     public void AddActivePlayer(Player player)

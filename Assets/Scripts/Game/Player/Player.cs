@@ -96,7 +96,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Start()
     {
-        //_playerNameText.text = _PV.Owner.NickName; //TODO player names and synchro
+        //_playerNameText.text = _PV.Owner.NickName;//TODO player names and synchro
 
         if (myColor == Color.clear)
             myColor = Color.white;
@@ -188,22 +188,21 @@ public class Player : MonoBehaviour, IPunObservable
         {
             if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1])
             {
-                Debug.Log("Picked bully Player " + bullyNo1 + " and " + bullyNo2 + " and " + bullyNo3);
-                this._isImposter = true;
+                _isImposter = true;
             }
         }
         else if (bullyNo3 == -1)
         {
             if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2])
             {
-                this._isImposter = true;
+                _isImposter = true;
             }
         }
         else
         {
             if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo3])
             {
-                this._isImposter = true;
+                _isImposter = true;
             }
         }
     }
