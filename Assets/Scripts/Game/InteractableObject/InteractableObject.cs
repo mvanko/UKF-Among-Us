@@ -49,7 +49,7 @@ public class InteractableObject : MonoBehaviour
         isMinigameCompleted = true;
         isHighlighted = false;
         highlight.SetActive(false);
-        player.MiniGameWon();
+        player.MiniGameWon(miniGame);
     }
 
     public void PlayMiniGame(Player player)

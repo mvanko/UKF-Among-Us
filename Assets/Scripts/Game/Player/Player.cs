@@ -70,6 +70,8 @@ public class Player : MonoBehaviour, IPunObservable
     public event Action<bool> OnReportAvailable;
     public event Action<bool> OnUseAvailable;
 
+    public event Action<Minigame> OnMinigameWon;
+
     private void Awake()
     {
         KILL.performed += KillTarget;
@@ -362,7 +364,7 @@ public class Player : MonoBehaviour, IPunObservable
             RaycastHit hit;
             Ray ray = new Ray(transform.position, body.position - transform.position);
             Debug.DrawRay(transform.position, body.position - transform.position, Color.cyan);
-            if (Physics.Raycast(ray, out hit, 500f, ~ignoreForBody))
+            if (Physics.Raycast(ray, out hit, 5f, ~ignoreForBody))
             {
                 if (hit.transform == body)
                 {
@@ -376,6 +378,10 @@ public class Player : MonoBehaviour, IPunObservable
                 {
                     bodiesFound.Remove(body.transform);
                 }
+            }
+            else
+            {
+                bodiesFound.Remove(body.transform);
             }
         }
     }
@@ -404,9 +410,11 @@ public class Player : MonoBehaviour, IPunObservable
         activeInteractableObject = null;
     }
 
-    public void MiniGameWon()
+    public void MiniGameWon(Minigame minigame)
     {
         activeInteractableObject = null;
+        UpdateInteractableHighlighted(null);
+        OnMinigameWon?.Invoke(minigame);
         //TODO
     }
 
