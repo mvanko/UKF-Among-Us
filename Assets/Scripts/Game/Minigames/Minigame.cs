@@ -11,6 +11,8 @@ public abstract class Minigame : MonoBehaviour
     private event Action _callbackClose;
     private event Action _callbackWin;
 
+    public abstract string Name();
+
     public void Setup(Action OnCloseCallback, Action OnWinCallback)
     {
         _callbackClose = OnCloseCallback;

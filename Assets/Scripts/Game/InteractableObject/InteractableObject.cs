@@ -17,6 +17,11 @@ public class InteractableObject : MonoBehaviour
 
     public static event Action<InteractableObject> OnHighlighted;
 
+    private void Start()
+    {
+        GameManager.Instance.AddActiveTask(miniGame);
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player" && !isMinigameCompleted && other.GetComponent<Player>() == Player.LocalPlayer)

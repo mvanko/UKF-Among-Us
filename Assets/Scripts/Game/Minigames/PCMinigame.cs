@@ -91,4 +91,9 @@ public class PCMinigame : Minigame
 
         yield return null;
     }
+
+    public override string Name()
+    {
+        return GameManager.Instance.MinigameData.pcTask;
+    }
 }

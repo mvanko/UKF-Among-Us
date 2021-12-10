@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 2aed88a9c4e6fa848991eae159ec0305, type: 2}
+  minigameData: {fileID: 11400000, guid: c71d95a032187ab45a0fcd61ee9a98f5, type: 2}

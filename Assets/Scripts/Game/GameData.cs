@@ -6,4 +6,5 @@ using UnityEngine;
 public class GameData : ScriptableObject
 {
     public PlayerData playerData;
+    public MinigameData minigameData;
 }

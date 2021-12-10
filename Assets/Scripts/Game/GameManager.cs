@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameData _gameData;
     [SerializeField] private Transform[] _levelSpawnPoints;
 
-    private List<Player> _activePlayers = new List<Player>();
+    private List<Minigame> _activeTasks = new List<Minigame>();
 
     public GameData GameData => _gameData;
     public PlayerData PlayerData => _gameData.playerData;
+    public MinigameData MinigameData => _gameData.minigameData;
     public Transform[] SpawnPoints => _levelSpawnPoints;
 
     public static GameManager Instance { get; private set; }
@@ -20,6 +22,9 @@ public class GameManager : MonoBehaviour
     private PhotonView _myPV;
 
     private int impostorNo1, impostorNo2, impostorNo3;
+
+    public event Action<Minigame> OnMinigameAdded;
+    public event Action<Minigame> OnMinigameRemoved;
 
     private void Awake()
     {
@@ -34,11 +39,22 @@ public class GameManager : MonoBehaviour
         {
             Player.OnPlayerReady += PickBully;
         }
+        Player.OnPlayerReady += RegisterCallbacks;
     }
 
     private void OnDestroy()
     {
-        Player.OnPlayerReady -= PickBully;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Player.OnPlayerReady -= PickBully;
+        }
+        Player.OnPlayerReady -= RegisterCallbacks;
+        Player.LocalPlayer.OnMinigameWon -= RemoveActiveTask;
+    }
+
+    private void RegisterCallbacks()
+    {
+        Player.LocalPlayer.OnMinigameWon += RemoveActiveTask;
     }
 
     public void SpawnNewPlayer()
@@ -52,24 +68,24 @@ public class GameManager : MonoBehaviour
 
         if (noPlayers >= 2 && noPlayers <= 4)
         {
-            impostorNo1 = Random.Range(0, noPlayers);
+            impostorNo1 = UnityEngine.Random.Range(0, noPlayers);
             impostorNo2 = -1;
             impostorNo3 = -1;
 
         }
         else if (noPlayers > 4 && noPlayers <= 8)
         {
-            impostorNo1 = Random.Range(0, noPlayers);
-            impostorNo2 = Random.Range(0, noPlayers);
+            impostorNo1 = UnityEngine.Random.Range(0, noPlayers);
+            impostorNo2 = UnityEngine.Random.Range(0, noPlayers);
             impostorNo3 = -1;
             while (impostorNo2 == impostorNo1)
             {
-                impostorNo2 = Random.Range(0, noPlayers);
+                impostorNo2 = UnityEngine.Random.Range(0, noPlayers);
             }
         }
         else
         {
-            impostorNo1 = Random.Range(0, noPlayers);
+            impostorNo1 = UnityEngine.Random.Range(0, noPlayers);
         /*    impostorNo2 = Random.Range(0, noPlayers);
             impostorNo3 = Random.Range(0, noPlayers);
 
@@ -92,13 +108,15 @@ public class GameManager : MonoBehaviour
         Player.LocalPlayer.SetRole(bullyNo1, bullyNo2, bullyNo3);
     }
 
-    public void AddActivePlayer(Player player)
+    public void AddActiveTask(Minigame minigame)
     {
-        _activePlayers.Add(player);
+        _activeTasks.Add(minigame);
+        OnMinigameAdded?.Invoke(minigame);
     }
 
-    public void RemoveActivePlayer(Player player)
+    public void RemoveActiveTask(Minigame minigame)
     {
-        _activePlayers.Remove(player);
+        _activeTasks.Remove(minigame);
+        OnMinigameRemoved?.Invoke(minigame);
     }
 }

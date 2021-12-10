@@ -92,4 +92,9 @@ public class Foodminigame : Minigame
 
         yield return null;
     }
+
+    public override string Name()
+    {
+        return GameManager.Instance.MinigameData.foodTask;
+    }
 }

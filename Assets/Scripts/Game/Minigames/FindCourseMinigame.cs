@@ -102,4 +102,8 @@ public class FindCourseMinigame : Minigame
         }
     }
 
+    public override string Name()
+    {
+        return GameManager.Instance.MinigameData.findCourseTask;
+    }
 }
