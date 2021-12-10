@@ -20,6 +20,7 @@ public class HUD : MonoBehaviour
         Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
         Player.LocalPlayer.OnUseAvailable -= UpdateUseButton;
+        useButton.onClick.RemoveListener(MakeInteraction);
     }
 
     private void PlayerReady()
@@ -30,9 +31,16 @@ public class HUD : MonoBehaviour
         killButton.gameObject.SetActive(Player.LocalPlayer.IsImposter);
         useButton.gameObject.SetActive(!Player.LocalPlayer.IsImposter);
 
+        useButton.onClick.AddListener(MakeInteraction);
+
         Player.LocalPlayer.OnKillAvailable += UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable += UpdateReportButton;
         Player.LocalPlayer.OnUseAvailable += UpdateUseButton;
+    }
+
+    private void MakeInteraction()
+    {
+        Player.LocalPlayer.MakeInteraction(true);
     }
 
     private void UpdateKillButton(bool value)

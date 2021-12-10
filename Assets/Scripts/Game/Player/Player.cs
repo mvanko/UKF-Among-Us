@@ -90,7 +90,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     void OnDestroy()
     {
-        if(this == LocalPlayer)
+        if (this == LocalPlayer)
         {
             InteractableObject.OnHighlighted -= UpdateInteractableHighlighted;
         }
@@ -342,6 +342,12 @@ public class Player : MonoBehaviour, IPunObservable
             return;
         }
 
+        if (activeInteractableObject != null)
+        {
+            _playerRigidbody.velocity = Vector3.zero;
+            return;
+        }
+
         _playerRigidbody.velocity = _lastMovementInput * GameManager.Instance.PlayerData.movementSpeed;
 
     }
@@ -390,10 +396,31 @@ public class Player : MonoBehaviour, IPunObservable
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            if (highlightedInteractableObject != null && activeInteractableObject == null)
+            MakeInteraction();
+        }
+    }
+
+    public void MakeInteraction(bool ignoreMouseClick = false)
+    {
+        if (highlightedInteractableObject != null && activeInteractableObject == null)
+        {
+            if (Keyboard.current.eKey.wasPressedThisFrame || ignoreMouseClick)
             {
                 activeInteractableObject = highlightedInteractableObject;
                 activeInteractableObject.PlayMiniGame(this);
+            }
+            else
+            {
+                RaycastHit hit;
+                Ray ray = myCamera.ScreenPointToRay(mousePositionInput);
+                if (Physics.Raycast(ray, out hit, interactLayer))
+                {
+                    if (hit.transform.tag == "Interactable")
+                    {
+                        activeInteractableObject = highlightedInteractableObject;
+                        activeInteractableObject.PlayMiniGame(this);
+                    }
+                }
             }
         }
     }
