@@ -116,6 +116,10 @@ public class Player : MonoBehaviour, IPunObservable
             }
         }
 
+        if (_PV != null && !_PV.IsMine)
+        {
+            return;
+        }
         _playerSpriteRenderer.color = myColor;
     }
 
@@ -185,24 +189,23 @@ public class Player : MonoBehaviour, IPunObservable
             if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1])
             {
                 Debug.Log("Picked bully Player " + bullyNo1 + " and " + bullyNo2 + " and " + bullyNo3);
-                _isImposter = true;
+                this._isImposter = true;
             }
-        }else if (bullyNo3 == -1)
+        }
+        else if (bullyNo3 == -1)
         {
             if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2])
             {
-                _isImposter = true;
+                this._isImposter = true;
             }
         }
         else
         {
             if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo3])
             {
-                _isImposter = true;
+                this._isImposter = true;
             }
         }
-
-        
     }
 
     public void SetColor(Color newColor)
@@ -429,12 +432,12 @@ public class Player : MonoBehaviour, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(direction);
-            //stream.SendNext(_isImposter);
+            stream.SendNext(_isImposter);
         }
         else
         {
             direction = (float)stream.ReceiveNext();
-            //this._isImposter = (bool)stream.ReceiveNext();
+            this._isImposter = (bool)stream.ReceiveNext();
         }
     }
 }

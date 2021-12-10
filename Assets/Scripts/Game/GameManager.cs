@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
             }
         }
         _myPV.RPC("RPC_SyncBully", RpcTarget.All, impostorNo1, impostorNo2, impostorNo3);
+        Debug.Log("Sending RPC: " + impostorNo1 +  " " + impostorNo2 +" " + impostorNo3);
     }
 
     [PunRPC]
