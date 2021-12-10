@@ -36,6 +36,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        Player.OnPlayerReady -= PickBully;
+    }
+
     public void SpawnNewPlayer()
     {
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), Vector3.zero, Quaternion.identity);
