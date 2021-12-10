@@ -65,18 +65,18 @@ public class GameManager : MonoBehaviour
         else
         {
             impostorNo1 = Random.Range(0, noPlayers);
-            impostorNo2 = Random.Range(0, noPlayers);
-            impostorNo3 = Random.Range(0, noPlayers);
+            //impostorNo2 = Random.Range(0, noPlayers);
+            //impostorNo3 = Random.Range(0, noPlayers);
 
-            while (impostorNo2 == impostorNo1 || impostorNo2 == impostorNo3)
-            {
-                impostorNo2 = Random.Range(0, noPlayers);
-            }
+            //while (impostorNo2 == impostorNo1 || impostorNo2 == impostorNo3)
+            //{
+            //    impostorNo2 = Random.Range(0, noPlayers);
+            //}
 
-            while (impostorNo3 == impostorNo1 || impostorNo3 == impostorNo2)
-            {
-                impostorNo3 = Random.Range(0, noPlayers);
-            }
+            //while (impostorNo3 == impostorNo1 || impostorNo3 == impostorNo2)
+            //{
+            //    impostorNo3 = Random.Range(0, noPlayers);
+            //}
         }
         _myPV.RPC("RPC_SyncBully", RpcTarget.All, impostorNo1, impostorNo2, impostorNo3);
     }
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     void RPC_SyncBully(int bullyNo1, int bullyNo2, int bullyNo3)
     {
-            //Player.LocalPlayer.SetRole(bullyNo1, bullyNo2, bullyNo3);
+        Player.LocalPlayer.SetRole(bullyNo1, bullyNo2, bullyNo3);
     }
 
     public void AddActivePlayer(Player player)
