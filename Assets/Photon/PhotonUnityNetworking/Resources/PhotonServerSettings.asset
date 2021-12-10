@@ -42,6 +42,7 @@ MonoBehaviour:
   - RPC_SendTimer
   - RPC_Kill
   - Countdown
+  - RPC_SyncBully
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

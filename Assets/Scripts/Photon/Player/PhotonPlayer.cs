@@ -11,7 +11,8 @@ public class PhotonPlayer : MonoBehaviour
     [SerializeField] private GameObject _playerPresence;
 
     Photon.Realtime.Player[] allPlayers;
-    int myNumber = 0;
+
+    private int myNumber;
 
     private Vector3 _presencePosition;
 
@@ -30,16 +31,14 @@ public class PhotonPlayer : MonoBehaviour
             }
             return;
         }
-
+            
         allPlayers = PhotonNetwork.PlayerList;
         foreach (Photon.Realtime.Player p in allPlayers)
         {
-            if (p == PhotonNetwork.LocalPlayer && _myPV.IsMine)
+            if (p == PhotonNetwork.LocalPlayer && _myPV != null && _myPV.IsMine)
             {
-                Debug.Log(p.ActorNumber);
                 _playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), GameManager.Instance.SpawnPoints[p.ActorNumber-1].GetChild(0).position, Quaternion.identity);
             }
         }
-
     }
 }

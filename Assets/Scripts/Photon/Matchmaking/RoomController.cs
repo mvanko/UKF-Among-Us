@@ -73,7 +73,7 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     void CreatePlayer()
     {
-        Vector3 _roomPosition = new Vector3(531f, 575f, 0f);
+        Vector3 _roomPosition = new Vector3(530f, 575f, 0f);
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), _roomPosition, Quaternion.identity);
     }
 
@@ -132,7 +132,7 @@ public class RoomController : MonoBehaviourPunCallbacks
         if (timeToStart <= 0)
         {
             _uiCountdownText.enabled = false;
-            timeToStart = 999;
+            timeToStart = 100;
             PhotonNetwork.AutomaticallySyncScene = true;
             StartGame();
         }

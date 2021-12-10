@@ -12,6 +12,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     [SerializeField] private Button _uiJoinMultiplayerButton;
     [SerializeField] private Button _uiCreateRoomButton;
     [SerializeField] private Button _uiChangeNameButton;
+    [SerializeField] Text _uiErrorText;
 
     public InputField _uiPlayerNameInput;
     public InputField _uiRoomNameInput;
@@ -86,7 +87,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         foreach (RoomInfo room in roomList)
         {
-            Debug.Log(room);
             if(room.PlayerCount > 0)
             {
                 ListRoom(room);
@@ -149,7 +149,8 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.Log("Failed to create room!");
+        _uiErrorText.text = "Failed to create a text, please check your internet connection or try to create a room with different name!";
+        _uiErrorText.gameObject.SetActive(true);
     }
 
     public override void OnJoinedRoom()

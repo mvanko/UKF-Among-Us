@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IPunObservable
 {
@@ -17,6 +18,8 @@ public class Player : MonoBehaviour, IPunObservable
     [SerializeField] private Animator _playerAnimator;
     [SerializeField] private SpriteRenderer _playerSpriteRenderer;
     [SerializeField] private Collider _playerCollider;
+
+    [SerializeField] Text _playerNameText;
 
     [SerializeField] private bool _isImposter;
 
@@ -93,6 +96,8 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Start()
     {
+        //_playerNameText.text = _PV.Owner.NickName; //TODO player names and synchro
+
         if (myColor == Color.clear)
             myColor = Color.white;
 
@@ -104,6 +109,7 @@ public class Player : MonoBehaviour, IPunObservable
 
         if (SceneManager.GetActiveScene().name == "Waiting Room")
         {
+            _playerNameText.enabled = false;
             if (_PV != null && !_PV.IsMine)
             {
                 _otherPlayer.gameObject.SetActive(false);
@@ -172,9 +178,31 @@ public class Player : MonoBehaviour, IPunObservable
         INTERACTION.Disable();
     }
 
-    public void SetRole(bool newRole)
+    public void SetRole(int bullyNo1, int bullyNo2, int bullyNo3)
     {
-        _isImposter = newRole;
+        if (bullyNo2 == -1 && bullyNo3 == -1)
+        {
+            if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1])
+            {
+                Debug.Log("Picked bully Player " + bullyNo1 + " and " + bullyNo2 + " and " + bullyNo3);
+                _isImposter = true;
+            }
+        }else if (bullyNo3 == -1)
+        {
+            if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2])
+            {
+                _isImposter = true;
+            }
+        }
+        else
+        {
+            if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo3])
+            {
+                _isImposter = true;
+            }
+        }
+
+        
     }
 
     public void SetColor(Color newColor)
@@ -204,7 +232,6 @@ public class Player : MonoBehaviour, IPunObservable
                 if (target.isDead)
                     return;
                 _playerTransform.position = target._playerTransform.position;
-                //target.Die();
                 target._PV.RPC("RPC_Kill", RpcTarget.All);
                 targets.Remove(target);
             }
@@ -229,7 +256,6 @@ public class Player : MonoBehaviour, IPunObservable
         _playerCollider.enabled = false;
         gameObject.layer = 3;
 
-        //DeadBody deadBody = Instantiate(_deadBodyPrototype.transform, transform.position, transform.rotation).GetComponent<DeadBody>();
         DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
     }
@@ -403,10 +429,12 @@ public class Player : MonoBehaviour, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(direction);
+            //stream.SendNext(_isImposter);
         }
         else
         {
             direction = (float)stream.ReceiveNext();
+            //this._isImposter = (bool)stream.ReceiveNext();
         }
     }
 }
