@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     void RPC_SyncBully(int bullyNo1, int bullyNo2, int bullyNo3)
     {
-            Player.LocalPlayer.SetRole(bullyNo1, bullyNo2, bullyNo3);
+            //Player.LocalPlayer.SetRole(bullyNo1, bullyNo2, bullyNo3);
     }
 
     public void AddActivePlayer(Player player)
