@@ -104,7 +104,7 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        PhotonNetwork.LoadLevel(0);
+        PhotonNetwork.LoadLevel(LEVEL0);
         base.OnLeftRoom();
     }
 
@@ -134,7 +134,11 @@ public class RoomController : MonoBehaviourPunCallbacks
             _uiCountdownText.enabled = false;
             timeToStart = 100;
             PhotonNetwork.AutomaticallySyncScene = true;
-            StartGame();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                StartGame();
+            }
+            
         }
     }
 
