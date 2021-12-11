@@ -21,7 +21,17 @@ public class InteractableObject : MonoBehaviour
 
     public static event Action<InteractableObject> OnHighlighted;
 
-    private void Start()
+    private void Awake()
+    {
+        GameManager.OnCanRegisterMinigames += RegisterMinigame;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnCanRegisterMinigames -= RegisterMinigame;
+    }
+
+    private void RegisterMinigame()
     {
         GameManager.Instance.AddActiveTask(miniGame);
     }

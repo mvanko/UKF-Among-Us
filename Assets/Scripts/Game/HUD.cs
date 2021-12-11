@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
+    [SerializeField] private Image progressBar;
     [SerializeField] private Button killButton;
     [SerializeField] private Button reportButton;
     [SerializeField] private Button useButton;
 
     void Awake()
     {
-        Player.OnPlayerReady += RegisterCallbacks;
+        Player.OnPlayerReady += RegisterPlayerCallbacks;
+        GameManager.OnGameManagerReady += RegisterGameManagerCallbacks;
     }
 
     private void Start()
@@ -21,15 +23,27 @@ public class HUD : MonoBehaviour
 
     private void OnDestroy()
     {
-        Player.OnPlayerReady -= RegisterCallbacks;
+        Player.OnPlayerReady -= RegisterPlayerCallbacks;
         Player.LocalPlayer.OnPlayerUpdated -= UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
         Player.LocalPlayer.OnUseAvailable -= UpdateUseButton;
+
+        GameManager.OnGameManagerReady -= RegisterGameManagerCallbacks;
+
+        GameManager.Instance.OnMinigameAdded -= (minigame) => UpdateProgressBar();
+        GameManager.Instance.OnMinigameRemoved -= (minigame) => UpdateProgressBar();
+
         useButton.onClick.RemoveListener(MakeInteraction);
     }
 
-    private void RegisterCallbacks()
+    private void RegisterGameManagerCallbacks() 
+    {
+        GameManager.Instance.OnMinigameAdded += (minigame) => UpdateProgressBar();
+        GameManager.Instance.OnMinigameRemoved += (minigame) => UpdateProgressBar();
+    }
+
+    private void RegisterPlayerCallbacks()
     {
         Player.LocalPlayer.OnPlayerUpdated += UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable += UpdateKillButton;
@@ -45,6 +59,11 @@ public class HUD : MonoBehaviour
         useButton.interactable = Player.LocalPlayer.UseAvailable;
         killButton.gameObject.SetActive(Player.LocalPlayer.IsImposter);
         useButton.gameObject.SetActive(!Player.LocalPlayer.IsImposter);
+    }
+
+    private void UpdateProgressBar()
+    {
+        progressBar.fillAmount = (float) GameManager.Instance.TotalTasksCompleted / GameManager.Instance.TotalTasks;
     }
 
     private void MakeInteraction()

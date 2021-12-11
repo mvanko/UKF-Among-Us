@@ -9,12 +9,18 @@ public class TaskList : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.Instance.OnMinigameAdded += AddMinigame;
+        GameManager.OnGameManagerReady += RegisterCallbacks;
     }
 
     private void OnDestroy()
     {
         GameManager.Instance.OnMinigameAdded -= AddMinigame;
+        GameManager.OnGameManagerReady -= RegisterCallbacks;
+    }
+
+    private void RegisterCallbacks()
+    {
+        GameManager.Instance.OnMinigameAdded += AddMinigame;
     }
 
     private void AddMinigame(Minigame minigame)

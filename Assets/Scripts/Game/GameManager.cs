@@ -10,18 +10,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameData _gameData;
     [SerializeField] private Transform[] _levelSpawnPoints;
 
+    private const int NumberOfTasks = 4;
+    private int numberOfCompletedTasks = 0;
     private List<Minigame> _activeTasks = new List<Minigame>();
 
     public GameData GameData => _gameData;
     public PlayerData PlayerData => _gameData.playerData;
     public MinigameData MinigameData => _gameData.minigameData;
     public Transform[] SpawnPoints => _levelSpawnPoints;
+    public int TotalTasks => NumberOfTasks * PhotonNetwork.PlayerList.Length; //TODO SYNC
+    public int TotalTasksCompleted => numberOfCompletedTasks; //TODO SYNC
 
     public static GameManager Instance { get; private set; }
 
     private PhotonView _myPV;
 
     private int impostorNo1, impostorNo2, impostorNo3;
+
+    public static event Action OnGameManagerReady;
+    public static event Action OnCanRegisterMinigames;
 
     public event Action<Minigame> OnMinigameAdded;
     public event Action<Minigame> OnMinigameRemoved;
@@ -37,6 +44,12 @@ public class GameManager : MonoBehaviour
             Player.OnPlayerReady += PickBully;
         }
         Player.OnPlayerReady += RegisterCallbacks;
+    }
+
+    private void Start()
+    {
+        OnGameManagerReady?.Invoke();
+        OnCanRegisterMinigames?.Invoke();
     }
 
     private void OnDestroy()
@@ -113,6 +126,7 @@ public class GameManager : MonoBehaviour
 
     public void RemoveActiveTask(Minigame minigame)
     {
+        numberOfCompletedTasks++;
         _activeTasks.Remove(minigame);
         OnMinigameRemoved?.Invoke(minigame);
     }

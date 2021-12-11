@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,15 +16,24 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button _uiQuitButton;
     [SerializeField] private Button _uiHowToPlayButton;
 
+    [SerializeField] private NetworkController _network;
+
     private const string WAITINGROOM = "Waiting Room";
 
     private void Awake()
     {
+        _network.OnConnectedToServer += UpdateMultiplayerButton;
+
         if(PlayerPrefs.HasKey("fullScreenMode"))
         {
             Screen.SetResolution(PlayerPrefs.GetInt("width"),
                 PlayerPrefs.GetInt("height"), (FullScreenMode) PlayerPrefs.GetInt("fullScreenMode"));
         }
+    }
+
+    private void OnDestroy()
+    {
+        _network.OnConnectedToServer -= UpdateMultiplayerButton;
     }
 
     private void OnEnable()
@@ -40,6 +50,11 @@ public class MainMenu : MonoBehaviour
         _uiSettingsButton.onClick.RemoveListener(OpenSettings);
         _uiQuitButton.onClick.RemoveListener(QuitGame);
         _uiHowToPlayButton.onClick.RemoveListener(OpenHowToPlay);
+    }
+
+    private void UpdateMultiplayerButton()
+    {
+        _uiMultiplayerButton.interactable = true;
     }
 
     private void Multiplayer()
