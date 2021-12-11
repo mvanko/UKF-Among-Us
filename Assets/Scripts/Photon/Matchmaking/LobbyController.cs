@@ -80,16 +80,19 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         roomListing.Clear();
 
-        for(int i = roomsContainer.childCount-1; i >= 0; i--)
+        if (roomsContainer != null)
         {
-            Destroy(roomsContainer.GetChild(i).gameObject);
-        }
-
-        foreach (RoomInfo room in roomList)
-        {
-            if(room.PlayerCount > 0)
+            for (int i = roomsContainer.childCount - 1; i >= 0; i--)
             {
-                ListRoom(room);
+                Destroy(roomsContainer.GetChild(i).gameObject);
+            }
+
+            foreach (RoomInfo room in roomList)
+            {
+                if (room.PlayerCount > 0)
+                {
+                    ListRoom(room);
+                }
             }
         }
     }

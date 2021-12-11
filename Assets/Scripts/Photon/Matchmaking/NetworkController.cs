@@ -10,13 +10,15 @@ public class NetworkController : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.ConnectUsingSettings();
+        if (PhotonNetwork.NetworkClientState != Photon.Realtime.ClientState.ConnectingToMasterServer)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 
     public override void OnConnectedToMaster()
     {
         server = PhotonNetwork.CloudRegion;
         _uiServerText.text = server;
-        
     }
 }

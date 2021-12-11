@@ -7,7 +7,7 @@ public class TaskList : MonoBehaviour
     [SerializeField] private Transform _taskItemContent;
     [SerializeField] private TaskItem _taskItemPrototype;
 
-    private void Start()
+    private void Awake()
     {
         GameManager.Instance.OnMinigameAdded += AddMinigame;
     }
