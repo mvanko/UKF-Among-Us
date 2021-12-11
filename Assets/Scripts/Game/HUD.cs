@@ -9,7 +9,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private Button reportButton;
     [SerializeField] private Button useButton;
 
-    void Start()
+    void Awake()
     {
         Player.OnPlayerReady += PlayerReady;
     }
@@ -25,6 +25,7 @@ public class HUD : MonoBehaviour
 
     private void PlayerReady()
     {
+        Debug.LogError("DONE: " + Player.LocalPlayer.IsImposter);
         killButton.interactable = Player.LocalPlayer.KillAvailable;
         reportButton.interactable = Player.LocalPlayer.ReportAvailable;
         useButton.interactable = Player.LocalPlayer.UseAvailable;

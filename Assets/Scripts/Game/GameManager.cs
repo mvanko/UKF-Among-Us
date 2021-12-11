@@ -30,10 +30,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         SpawnNewPlayer();
-    }
 
-    private void Start()
-    {
         _myPV = GetComponent<PhotonView>();
         if (PhotonNetwork.IsMasterClient)
         {

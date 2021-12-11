@@ -79,13 +79,6 @@ public class Player : MonoBehaviour, IPunObservable
         INTERACTION.performed += Interact;
 
         _PV = GetComponent<PhotonView>();
-
-        if (_PV != null && _PV.IsMine)
-        {
-            _localPlayer = this;
-            InteractableObject.OnHighlighted += UpdateInteractableHighlighted;
-            OnPlayerReady?.Invoke();
-        }
     }
 
     void OnDestroy()
@@ -98,6 +91,12 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Start()
     {
+        if (_PV != null && _PV.IsMine)
+        {
+            _localPlayer = this;
+            InteractableObject.OnHighlighted += UpdateInteractableHighlighted;
+            OnPlayerReady?.Invoke();
+        }
 
         if (SceneManager.GetActiveScene().name == "Waiting Room")
         {
@@ -410,7 +409,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     public void MakeInteraction(bool ignoreMouseClick = false)
     {
-        if (highlightedInteractableObject != null && activeInteractableObject == null)
+        if (!IsImposter && highlightedInteractableObject != null && activeInteractableObject == null)
         {
             if (Keyboard.current.eKey.wasPressedThisFrame || ignoreMouseClick)
             {

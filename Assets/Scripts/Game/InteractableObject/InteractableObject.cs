@@ -28,7 +28,7 @@ public class InteractableObject : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player" && !isMinigameCompleted && other.GetComponent<Player>() == Player.LocalPlayer)
+        if(other.tag == "Player" && !isMinigameCompleted && other.GetComponent<Player>() == Player.LocalPlayer && !Player.LocalPlayer.IsImposter)
         {
             highlight.SetActive(true);
             isHighlighted = true;
@@ -38,7 +38,7 @@ public class InteractableObject : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player" && !isMinigameCompleted && other.GetComponent<Player>() == Player.LocalPlayer)
+        if (other.tag == "Player" && !isMinigameCompleted && other.GetComponent<Player>() == Player.LocalPlayer && !Player.LocalPlayer.IsImposter)
         {
             highlight.SetActive(false);
             isHighlighted = false;
