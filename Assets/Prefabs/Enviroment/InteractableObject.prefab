@@ -213,3 +213,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   miniGame: {fileID: 0}
   highlight: {fileID: 3334615285046304652}
+  interactableObjectRenderer: {fileID: 3334615285801764284}
+  spriteAfterWon: {fileID: 0}

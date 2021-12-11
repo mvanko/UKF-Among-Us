@@ -2,11 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InteractableObject : MonoBehaviour
 {
     [SerializeField] private Minigame miniGame;
     [SerializeField] private GameObject highlight;
+
+    [SerializeField] private SpriteRenderer interactableObjectRenderer = null;
+    [SerializeField] private Sprite spriteAfterWon = null;
 
     private bool isMinigameCompleted = false;
     private bool isMinigameSpawned = false;
@@ -54,6 +58,12 @@ public class InteractableObject : MonoBehaviour
         isMinigameCompleted = true;
         isHighlighted = false;
         highlight.SetActive(false);
+
+        if(spriteAfterWon != null)
+        {
+            interactableObjectRenderer.sprite = spriteAfterWon;
+        }
+
         player.MiniGameWon(miniGame);
     }
 
