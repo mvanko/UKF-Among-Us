@@ -98,16 +98,6 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Start()
     {
-        //_playerNameText.text = _PV.Owner.NickName;//TODO player names and synchro
-
-        if (myColor == Color.clear)
-            myColor = Color.white;
-
-        if (_PV != null && !_PV.IsMine)
-        {
-            myCamera.gameObject.SetActive(false);
-            lightMask.SetActive(false);
-        }
 
         if (SceneManager.GetActiveScene().name == "Waiting Room")
         {
@@ -116,6 +106,24 @@ public class Player : MonoBehaviour, IPunObservable
             {
                 _otherPlayer.gameObject.SetActive(false);
             }
+        }
+
+        if (_PV.IsMine)
+        {
+            _playerNameText.text = PhotonNetwork.NickName;
+        }
+        else
+        {
+            _playerNameText.text = _PV.Owner.NickName;
+        }
+
+        if (myColor == Color.clear)
+            myColor = Color.white;
+
+        if (_PV != null && !_PV.IsMine)
+        {
+            myCamera.gameObject.SetActive(false);
+            lightMask.SetActive(false);
         }
 
         if (_PV != null && !_PV.IsMine)
