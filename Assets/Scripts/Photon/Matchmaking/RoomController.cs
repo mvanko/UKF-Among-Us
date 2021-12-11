@@ -90,9 +90,12 @@ public class RoomController : MonoBehaviourPunCallbacks
     }
 
     public void StartGame()
-    { 
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.LoadLevel(LEVEL1);
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.LoadLevel(LEVEL1);
+        }
     }
 
     public void LeaveGame()
@@ -133,7 +136,7 @@ public class RoomController : MonoBehaviourPunCallbacks
         {
             _uiCountdownText.enabled = false;
             timeToStart = 100;
-            PhotonNetwork.AutomaticallySyncScene = true;
+
             if (PhotonNetwork.IsMasterClient)
             {
                 StartGame();
