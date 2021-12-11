@@ -11,32 +11,40 @@ public class HUD : MonoBehaviour
 
     void Awake()
     {
-        Player.OnPlayerReady += PlayerReady;
+        Player.OnPlayerReady += RegisterCallbacks;
+    }
+
+    private void Start()
+    {
+        useButton.onClick.AddListener(MakeInteraction);
     }
 
     private void OnDestroy()
     {
-        Player.OnPlayerReady -= PlayerReady;
+        Player.OnPlayerReady -= RegisterCallbacks;
+        Player.LocalPlayer.OnPlayerUpdated -= UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
         Player.LocalPlayer.OnUseAvailable -= UpdateUseButton;
         useButton.onClick.RemoveListener(MakeInteraction);
     }
 
-    private void PlayerReady()
+    private void RegisterCallbacks()
     {
-        Debug.LogError("DONE: " + Player.LocalPlayer.IsImposter);
-        killButton.interactable = Player.LocalPlayer.KillAvailable;
-        reportButton.interactable = Player.LocalPlayer.ReportAvailable;
-        useButton.interactable = Player.LocalPlayer.UseAvailable;
-        killButton.gameObject.SetActive(Player.LocalPlayer.IsImposter);
-        useButton.gameObject.SetActive(!Player.LocalPlayer.IsImposter);
-
-        useButton.onClick.AddListener(MakeInteraction);
-
+        Player.LocalPlayer.OnPlayerUpdated += UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable += UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable += UpdateReportButton;
         Player.LocalPlayer.OnUseAvailable += UpdateUseButton;
+        UpdateGameUI();
+    }
+
+    private void UpdateGameUI()
+    {
+        killButton.interactable = Player.LocalPlayer.KillAvailable;
+        reportButton.interactable = Player.LocalPlayer.ReportAvailable && !Player.LocalPlayer.IsDead;
+        useButton.interactable = Player.LocalPlayer.UseAvailable;
+        killButton.gameObject.SetActive(Player.LocalPlayer.IsImposter);
+        useButton.gameObject.SetActive(!Player.LocalPlayer.IsImposter);
     }
 
     private void MakeInteraction()

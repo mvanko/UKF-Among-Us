@@ -763,7 +763,7 @@ PrefabInstance:
     - target: {fileID: 114344768413473294, guid: 05f32eddd3e41fd4597ada617b785928,
         type: 3}
       propertyPath: m_ControlPath
-      value: <Keyboard>/f
+      value: <Keyboard>/space
       objectReference: {fileID: 0}
     - target: {fileID: 114547973042304788, guid: 05f32eddd3e41fd4597ada617b785928,
         type: 3}

@@ -59,6 +59,7 @@ public class Player : MonoBehaviour, IPunObservable
     private bool reportAvailable = false;
     private bool useAvailable = false;
 
+    public bool IsDead => isDead;
     public bool IsImposter => _isImposter;
     public bool KillAvailable => killAvailable;
     public bool UseAvailable => useAvailable;
@@ -66,6 +67,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     public static event Action OnPlayerReady;
 
+    public event Action OnPlayerUpdated;
     public event Action<bool> OnKillAvailable;
     public event Action<bool> OnReportAvailable;
     public event Action<bool> OnUseAvailable;
@@ -214,6 +216,8 @@ public class Player : MonoBehaviour, IPunObservable
                 _isImposter = true;
             }
         }
+
+        OnPlayerUpdated?.Invoke();
     }
 
     public void SetColor(Color newColor)
@@ -228,7 +232,7 @@ public class Player : MonoBehaviour, IPunObservable
     void KillTarget(InputAction.CallbackContext context)
     {
 
-        if (!_PV.IsMine | !_isImposter)
+        if (!_PV.IsMine || !_isImposter)
         {
             return;
         }
@@ -269,6 +273,8 @@ public class Player : MonoBehaviour, IPunObservable
 
         DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
+
+        OnPlayerUpdated?.Invoke();
     }
 
     private void ResetAnimatorVariables()
