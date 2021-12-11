@@ -36,14 +36,14 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        SpawnNewPlayer();
-
         _myPV = GetComponent<PhotonView>();
         if (PhotonNetwork.IsMasterClient)
         {
             Player.OnPlayerReady += PickBully;
         }
         Player.OnPlayerReady += RegisterCallbacks;
+
+        SpawnNewPlayer();
     }
 
     private void Start()

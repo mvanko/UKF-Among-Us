@@ -47,6 +47,8 @@ public class Player : MonoBehaviour, IPunObservable
     [SerializeField] LayerMask ignoreForBody;
     [SerializeField] LayerMask interactLayer;
 
+    [SerializeField] LayerMask everythingMask;
+
     [SerializeField] Camera myCamera;
     [SerializeField] GameObject lightMask;
 
@@ -141,7 +143,7 @@ public class Player : MonoBehaviour, IPunObservable
             Player tempTarget = other.GetComponent<Player>();
             if (_isImposter)
             {
-                if (tempTarget._isImposter)
+                if (tempTarget._isImposter || tempTarget.IsDead)
                     return;
                 else
                 {
@@ -167,7 +169,7 @@ public class Player : MonoBehaviour, IPunObservable
                 targets.Remove(tempTarget);
             }
 
-            if (this == _localPlayer && targets.Count == 0 && killAvailable)
+            if (this == _localPlayer && targets.Count == 0 && killAvailable && !tempTarget.IsDead)
             {
                 killAvailable = false;
                 OnKillAvailable?.Invoke(false);
@@ -249,6 +251,7 @@ public class Player : MonoBehaviour, IPunObservable
                 _playerTransform.position = target._playerTransform.position;
                 target._PV.RPC("RPC_Kill", RpcTarget.All);
                 targets.Remove(target);
+                OnKillAvailable?.Invoke(false);
             }
         }
     }
@@ -261,15 +264,18 @@ public class Player : MonoBehaviour, IPunObservable
 
     public void Die()
     {
+        isDead = true;
+        gameObject.layer = 9;
+        _playerCollider.enabled = false;
+
         if (!_PV.IsMine)
         {
             return;
         }
 
-        isDead = true;
         _playerAnimator.SetBool("IsDead", isDead);
-        _playerCollider.enabled = false;
-        gameObject.layer = 3;
+
+        myCamera.cullingMask = everythingMask;
 
         DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
@@ -367,12 +373,12 @@ public class Player : MonoBehaviour, IPunObservable
 
     void BodySearch()
     {
-        if (_PV.IsMine && !reportAvailable && bodiesFound.Count > 0)
+        if (_PV.IsMine && !isDead && !reportAvailable && bodiesFound.Count > 0)
         {
             reportAvailable = true;
             OnReportAvailable?.Invoke(true);
         }
-        else if (_PV.IsMine && reportAvailable && bodiesFound.Count == 0)
+        else if (_PV.IsMine && !isDead && reportAvailable && bodiesFound.Count == 0)
         {
             reportAvailable = false;
             OnReportAvailable?.Invoke(false);
@@ -460,7 +466,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void ReportBody(InputAction.CallbackContext obj)
     {
-        if (bodiesFound == null)
+        if (bodiesFound == null || isDead)
         {
             return;
         }

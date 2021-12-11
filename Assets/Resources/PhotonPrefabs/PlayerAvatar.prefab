@@ -65,7 +65,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 311
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -689,6 +689,9 @@ MonoBehaviour:
   interactLayer:
     serializedVersion: 2
     m_Bits: 256
+  everythingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   myCamera: {fileID: 456430111}
   lightMask: {fileID: 8700610439912495353}
 --- !u!95 &8007782247390794474
