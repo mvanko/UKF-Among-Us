@@ -16,12 +16,12 @@ MonoBehaviour:
   pcTask: "Nap\xED\u0161te mail"
   findCourseTask: "N\xE1jdite kurz"
   tableTask: 
-  receptionTask: 
-  vestibul1Task: 
-  vestibul2Task: 
-  toiletTask: 
-  bookTask: 
-  aulaTask: 
-  engineRoomTask: 
-  hall1Task: 
-  hall2Task: 
+  receptionTask: "N\xE1jdite miestnos\u0165"
+  vestibul1Task: Vyzdihnite kartu
+  vestibul2Task: "Prilo\u017Ete kartu"
+  toiletTask: "Vyme\u0148te \u017Eiarovku"
+  bookTask: "N\xE1jdite knihu"
+  aulaTask: Opakujte po mne
+  engineRoomTask: "Prepojte k\xE1ble"
+  hall1Task: "N\xE1jdite knihu"
+  hall2Task: "Vr\xE1\u0165te knihu"

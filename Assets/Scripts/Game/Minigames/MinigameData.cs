@@ -16,7 +16,6 @@ public class MinigameData : ScriptableObject
     public string foodTask;
     public string pcTask;
     public string findCourseTask;
-    public string tableTask;
     public string receptionTask; 
     public string vestibul1Task;
     public string vestibul2Task;
