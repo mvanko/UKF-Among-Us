@@ -14,6 +14,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private Button settingButton;
 
     [SerializeField] private Text bodyReportedText;
+    [SerializeField] private Text killCooldownText;
 
     [SerializeField] private Canvas settingCanvas;
     [SerializeField] private Canvas gameCanvas;
@@ -108,6 +109,7 @@ public class HUD : MonoBehaviour
     private void UpdateKillButton(bool value)
     {
         killButton.interactable = value;
+        killCooldownText.gameObject.SetActive(Player.LocalPlayer.KillCooldown > 0f);
     }
 
     private void UpdateReportButton(bool value)
@@ -126,5 +128,17 @@ public class HUD : MonoBehaviour
 
         gameCanvas.gameObject.SetActive(false);
         reportCanvas.gameObject.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if(Player.LocalPlayer.KillCooldown > 0f)
+        {
+            killCooldownText.text = $"{(int) Player.LocalPlayer.KillCooldown}";
+        }
+        else if(killCooldownText.gameObject.activeSelf)
+        {
+            killCooldownText.gameObject.SetActive(false);
+        }
     }
 }

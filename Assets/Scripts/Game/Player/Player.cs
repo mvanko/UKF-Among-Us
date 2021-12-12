@@ -61,6 +61,10 @@ public class Player : MonoBehaviour, IPunObservable
     private bool reportAvailable = false;
     private bool useAvailable = false;
 
+    private float killCooldown = 30f;
+
+    public float KillCooldown => killCooldown;
+
     public bool IsDead => isDead;
     public bool IsImposter => _isImposter;
     public bool KillAvailable => killAvailable;
@@ -148,7 +152,7 @@ public class Player : MonoBehaviour, IPunObservable
                     return;
                 else
                 {
-                    if (this == _localPlayer && !killAvailable)
+                    if (this == _localPlayer && !killAvailable && killCooldown <= 0f)
                     {
                         killAvailable = true;
                         OnKillAvailable?.Invoke(true);
@@ -252,6 +256,8 @@ public class Player : MonoBehaviour, IPunObservable
                 _playerTransform.position = target._playerTransform.position;
                 target._PV.RPC("RPC_Kill", RpcTarget.All);
                 targets.Remove(target);
+
+                killCooldown = 20f;
                 OnKillAvailable?.Invoke(false);
             }
         }
@@ -357,6 +363,11 @@ public class Player : MonoBehaviour, IPunObservable
         }
 
         mousePositionInput = MOUSE.ReadValue<Vector2>();
+
+        if(_isImposter && killCooldown > 0)
+        {
+            killCooldown -= Time.deltaTime;
+        } 
     }
 
     private void FixedUpdate()
