@@ -1122,6 +1122,9 @@ MonoBehaviour:
   settingButton: {fileID: 3703117694429748473}
   bodyReportedText: {fileID: 4202021707854131063}
   settingCanvas: {fileID: 1812086033353485012}
+  gameCanvas: {fileID: 7442194446498657036}
+  reportCanvas: {fileID: 3698043070308516720, guid: 6198f26dc8c9b994f9c58ceb771cdf3e,
+    type: 3}
 --- !u!1 &8328095409507681066
 GameObject:
   m_ObjectHideFlags: 0
