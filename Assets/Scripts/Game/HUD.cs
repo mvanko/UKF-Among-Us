@@ -1,3 +1,5 @@
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,21 +11,32 @@ public class HUD : MonoBehaviour
     [SerializeField] private Button killButton;
     [SerializeField] private Button reportButton;
     [SerializeField] private Button useButton;
+    [SerializeField] private Button settingButton;
+
+    [SerializeField] private Text bodyReportedText;
+
+    [SerializeField] private Canvas settingCanvas;
+    [SerializeField] private Canvas gameCanvas;
+    [SerializeField] private Canvas reportCanvas;
+
 
     void Awake()
     {
         Player.OnPlayerReady += RegisterPlayerCallbacks;
         GameManager.OnGameManagerReady += RegisterGameManagerCallbacks;
+        Player.OnReportStarted += BodyFound;
     }
 
     private void Start()
     {
         useButton.onClick.AddListener(MakeInteraction);
+        settingButton.onClick.AddListener(OpenSettings);
     }
 
     private void OnDestroy()
     {
         Player.OnPlayerReady -= RegisterPlayerCallbacks;
+        Player.OnReportStarted -= BodyFound;
         Player.LocalPlayer.OnPlayerUpdated -= UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
@@ -35,6 +48,7 @@ public class HUD : MonoBehaviour
         GameManager.Instance.OnMinigameRemoved -= (minigame) => UpdateProgressBar();
 
         useButton.onClick.RemoveListener(MakeInteraction);
+        settingButton.onClick.RemoveListener(OpenSettings);
     }
 
     private void RegisterGameManagerCallbacks() 
@@ -71,6 +85,26 @@ public class HUD : MonoBehaviour
         Player.LocalPlayer.MakeInteraction(true);
     }
 
+    private void OpenSettings()
+    {
+        if (settingCanvas.enabled == false)
+        {
+            settingCanvas.enabled = true;
+        }
+        else
+        {
+            settingCanvas.enabled = false;
+        }
+       
+    }
+
+    public void BodyFound()
+    {
+        bodyReportedText.gameObject.SetActive(true);
+        StartCoroutine(DelayCoroutine());
+
+    }
+
     private void UpdateKillButton(bool value)
     {
         killButton.interactable = value;
@@ -84,5 +118,13 @@ public class HUD : MonoBehaviour
     private void UpdateUseButton(bool value)
     {
         useButton.interactable = value;
+    }
+
+    IEnumerator DelayCoroutine()
+    {
+        yield return new WaitForSeconds(3);
+
+        gameCanvas.gameObject.SetActive(false);
+        reportCanvas.gameObject.SetActive(true);
     }
 }

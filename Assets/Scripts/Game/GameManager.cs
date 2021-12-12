@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameData _gameData;
     [SerializeField] private Transform[] _levelSpawnPoints;
 
+    [SerializeField] private Canvas _reportCanvas;
+    [SerializeField] private Canvas _gameCanvas;
+
     private const int NumberOfTasks = 4;
     private int numberOfCompletedTasks = 0;
     private List<Minigame> _activeTasks = new List<Minigame>();
@@ -96,18 +99,6 @@ public class GameManager : MonoBehaviour
         else
         {
             impostorNo1 = UnityEngine.Random.Range(0, noPlayers);
-        /*    impostorNo2 = Random.Range(0, noPlayers);
-            impostorNo3 = Random.Range(0, noPlayers);
-
-            while (impostorNo2 == impostorNo1 || impostorNo2 == impostorNo3)
-            {
-                impostorNo2 = Random.Range(0, noPlayers);
-            }
-
-            while (impostorNo3 == impostorNo1 || impostorNo3 == impostorNo2)
-            {
-                impostorNo3 = Random.Range(0, noPlayers);
-            }*/
         }
         _myPV.RPC("RPC_SyncBully", RpcTarget.All, impostorNo1, impostorNo2, impostorNo3);
     }

@@ -68,12 +68,13 @@ public class Player : MonoBehaviour, IPunObservable
     public bool ReportAvailable => reportAvailable;
 
     public static event Action OnPlayerReady;
+    public static event Action OnReportStarted;
 
     public event Action OnPlayerUpdated;
     public event Action<bool> OnKillAvailable;
     public event Action<bool> OnReportAvailable;
     public event Action<bool> OnUseAvailable;
-
+    
     public event Action<Minigame> OnMinigameWon;
 
     private void Awake()
@@ -482,6 +483,14 @@ public class Player : MonoBehaviour, IPunObservable
         allBodies.Remove(tempBody);
         bodiesFound.Remove(tempBody);
         tempBody.GetComponent<DeadBody>().Report();
+        _PV.RPC("BodyFound", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void BodyFound()
+    {
+        _playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        OnReportStarted?.Invoke();
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -497,4 +506,5 @@ public class Player : MonoBehaviour, IPunObservable
             this._isImposter = (bool)stream.ReceiveNext();
         }
     }
+
 }
