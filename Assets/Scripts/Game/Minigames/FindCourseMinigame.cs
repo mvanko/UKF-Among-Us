@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class FindCourseMinigame : Minigame
 {
     [SerializeField] Text text_kurz;
-    [SerializeField] GameObject GamePanel;
     [SerializeField] GameObject[] myObjects;
 
     private int randomNumber;
