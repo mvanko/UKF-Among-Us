@@ -266,6 +266,10 @@ public class Player : MonoBehaviour, IPunObservable
     {
         isDead = true;
         gameObject.layer = 9;
+        foreach (Transform child in gameObject.GetComponentsInChildren<Transform>(true))
+        {
+            child.gameObject.layer = 9;
+        }
         _playerCollider.enabled = false;
 
         if (!_PV.IsMine)
