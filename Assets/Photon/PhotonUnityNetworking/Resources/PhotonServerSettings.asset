@@ -44,6 +44,10 @@ MonoBehaviour:
   - Countdown
   - RPC_SyncBully
   - BodyFound
+  - RPC_SyncTaskCompleted
+  - RPC_SyncTotalTasks
+  - RPC_CrewmatesWon
+  - RPC_ImpostorsWon
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

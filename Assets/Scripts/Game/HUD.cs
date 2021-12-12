@@ -25,7 +25,6 @@ public class HUD : MonoBehaviour
     {
         Player.OnPlayerReady += RegisterPlayerCallbacks;
         GameManager.OnGameManagerReady += RegisterGameManagerCallbacks;
-        Player.OnReportStarted += BodyFound;
     }
 
     private void Start()
@@ -37,7 +36,7 @@ public class HUD : MonoBehaviour
     private void OnDestroy()
     {
         Player.OnPlayerReady -= RegisterPlayerCallbacks;
-        Player.OnReportStarted -= BodyFound;
+        Player.LocalPlayer.OnReportStarted -= BodyFound;
         Player.LocalPlayer.OnPlayerUpdated -= UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
@@ -47,6 +46,7 @@ public class HUD : MonoBehaviour
 
         GameManager.Instance.OnMinigameAdded -= (minigame) => UpdateProgressBar();
         GameManager.Instance.OnMinigameRemoved -= (minigame) => UpdateProgressBar();
+        GameManager.Instance.OnTasksUpdated -= UpdateProgressBar;
 
         useButton.onClick.RemoveListener(MakeInteraction);
         settingButton.onClick.RemoveListener(OpenSettings);
@@ -54,6 +54,7 @@ public class HUD : MonoBehaviour
 
     private void RegisterGameManagerCallbacks() 
     {
+        GameManager.Instance.OnTasksUpdated += UpdateProgressBar;
         GameManager.Instance.OnMinigameAdded += (minigame) => UpdateProgressBar();
         GameManager.Instance.OnMinigameRemoved += (minigame) => UpdateProgressBar();
     }
@@ -63,6 +64,7 @@ public class HUD : MonoBehaviour
         Player.LocalPlayer.OnPlayerUpdated += UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable += UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable += UpdateReportButton;
+        Player.LocalPlayer.OnReportStarted += BodyFound;
         Player.LocalPlayer.OnUseAvailable += UpdateUseButton;
         UpdateGameUI();
     }

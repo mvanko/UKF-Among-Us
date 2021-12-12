@@ -72,13 +72,13 @@ public class Player : MonoBehaviour, IPunObservable
     public bool ReportAvailable => reportAvailable;
 
     public static event Action OnPlayerReady;
-    public static event Action OnReportStarted;
+    public event Action OnReportStarted;
 
     public event Action OnPlayerUpdated;
     public event Action<bool> OnKillAvailable;
     public event Action<bool> OnReportAvailable;
     public event Action<bool> OnUseAvailable;
-    
+
     public event Action<Minigame> OnMinigameWon;
 
     private void Awake()
@@ -204,21 +204,24 @@ public class Player : MonoBehaviour, IPunObservable
     {
         if (bullyNo2 == -1 && bullyNo3 == -1)
         {
-            if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1])
+            if (PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.PlayerList[bullyNo1].ActorNumber)
             {
                 _isImposter = true;
             }
         }
         else if (bullyNo3 == -1)
         {
-            if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2])
+            if (PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.PlayerList[bullyNo1].ActorNumber 
+                || PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.PlayerList[bullyNo2].ActorNumber)
             {
                 _isImposter = true;
             }
         }
         else
         {
-            if (PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo1] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo2] || PhotonNetwork.LocalPlayer == PhotonNetwork.PlayerList[bullyNo3])
+            if (PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.PlayerList[bullyNo1].ActorNumber 
+                || PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.PlayerList[bullyNo2].ActorNumber 
+                || PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.PlayerList[bullyNo3].ActorNumber)
             {
                 _isImposter = true;
             }
@@ -267,6 +270,7 @@ public class Player : MonoBehaviour, IPunObservable
     void RPC_Kill()
     {
         Die();
+        GameManager.Instance.AddDeadPlayer(this);
     }
 
     public void Die()
