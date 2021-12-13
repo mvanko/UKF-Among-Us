@@ -7,8 +7,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.IO;
 using UnityEngine.UI;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class Player : MonoBehaviour, IPunObservable
+public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
 {
     [SerializeField] private GameObject _deadBodyPrototype;
     [SerializeField] private GameObject _otherPlayer;
@@ -62,6 +64,8 @@ public class Player : MonoBehaviour, IPunObservable
     private bool useAvailable = false;
 
     private float killCooldown = 30f;
+
+    public const byte SendReportToAll = 2;
 
     public float KillCooldown => killCooldown;
 
@@ -189,6 +193,7 @@ public class Player : MonoBehaviour, IPunObservable
         REPORT.Enable();
         MOUSE.Enable();
         INTERACTION.Enable();
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     private void OnDisable()
@@ -198,6 +203,7 @@ public class Player : MonoBehaviour, IPunObservable
         REPORT.Disable();
         MOUSE.Disable();
         INTERACTION.Disable();
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void SetRole(int bullyNo1, int bullyNo2, int bullyNo3)
@@ -504,6 +510,9 @@ public class Player : MonoBehaviour, IPunObservable
     [PunRPC]
     private void BodyFound()
     {
+        bool content = true;
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(SendReportToAll, content, raiseEventOptions, SendOptions.SendReliable);
         _playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         OnReportStarted?.Invoke();
     }
@@ -522,4 +531,8 @@ public class Player : MonoBehaviour, IPunObservable
         }
     }
 
+    public void OnEvent(EventData photonEvent)
+    {
+        throw new NotImplementedException();
+    }
 }

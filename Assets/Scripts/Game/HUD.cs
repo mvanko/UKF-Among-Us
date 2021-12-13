@@ -1,11 +1,14 @@
 
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUD : MonoBehaviour
+public class HUD : MonoBehaviour, IOnEventCallback
 {
     [SerializeField] private Image progressBar;
     [SerializeField] private Button killButton;
@@ -36,7 +39,6 @@ public class HUD : MonoBehaviour
     private void OnDestroy()
     {
         Player.OnPlayerReady -= RegisterPlayerCallbacks;
-        Player.LocalPlayer.OnReportStarted -= BodyFound;
         Player.LocalPlayer.OnPlayerUpdated -= UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
@@ -64,7 +66,6 @@ public class HUD : MonoBehaviour
         Player.LocalPlayer.OnPlayerUpdated += UpdateGameUI;
         Player.LocalPlayer.OnKillAvailable += UpdateKillButton;
         Player.LocalPlayer.OnReportAvailable += UpdateReportButton;
-        Player.LocalPlayer.OnReportStarted += BodyFound;
         Player.LocalPlayer.OnUseAvailable += UpdateUseButton;
         UpdateGameUI();
     }
@@ -98,7 +99,16 @@ public class HUD : MonoBehaviour
         {
             settingCanvas.enabled = false;
         }
-       
+    }
+
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void BodyFound()
@@ -141,6 +151,14 @@ public class HUD : MonoBehaviour
         else if(killCooldownText.gameObject.activeSelf)
         {
             killCooldownText.gameObject.SetActive(false);
+        }
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == 2)
+        {
+            BodyFound();
         }
     }
 }
