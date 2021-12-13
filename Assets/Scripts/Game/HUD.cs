@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour, IOnEventCallback
@@ -15,14 +16,15 @@ public class HUD : MonoBehaviour, IOnEventCallback
     [SerializeField] private Button reportButton;
     [SerializeField] private Button useButton;
     [SerializeField] private Button settingButton;
+    [SerializeField] private Button continueButton;
+    [SerializeField] private Button leaveButton;
 
     [SerializeField] private Text bodyReportedText;
     [SerializeField] private Text killCooldownText;
 
-    [SerializeField] private Canvas settingCanvas;
+    [SerializeField] private GameObject settingPanel;
     [SerializeField] private Canvas gameCanvas;
     [SerializeField] private Canvas reportCanvas;
-
 
     void Awake()
     {
@@ -32,6 +34,8 @@ public class HUD : MonoBehaviour, IOnEventCallback
 
     private void Start()
     {
+        continueButton.onClick.AddListener(ContinueGame);
+        leaveButton.onClick.AddListener(LeaveGame);
         useButton.onClick.AddListener(MakeInteraction);
         settingButton.onClick.AddListener(OpenSettings);
     }
@@ -50,6 +54,8 @@ public class HUD : MonoBehaviour, IOnEventCallback
         GameManager.Instance.OnMinigameRemoved -= (minigame) => UpdateProgressBar();
         GameManager.Instance.OnTasksUpdated -= UpdateProgressBar;
 
+        continueButton.onClick.RemoveListener(ContinueGame);
+        leaveButton.onClick.RemoveListener(LeaveGame);
         useButton.onClick.RemoveListener(MakeInteraction);
         settingButton.onClick.RemoveListener(OpenSettings);
     }
@@ -91,13 +97,13 @@ public class HUD : MonoBehaviour, IOnEventCallback
 
     private void OpenSettings()
     {
-        if (settingCanvas.enabled == false)
+        if (settingPanel.active == false)
         {
-            settingCanvas.enabled = true;
+            settingPanel.SetActive(true);
         }
         else
         {
-            settingCanvas.enabled = false;
+            settingPanel.SetActive(false);
         }
     }
 
@@ -132,6 +138,17 @@ public class HUD : MonoBehaviour, IOnEventCallback
     private void UpdateUseButton(bool value)
     {
         useButton.interactable = value;
+    }
+
+    private void ContinueGame()
+    {
+        settingPanel.SetActive(false);
+    }
+
+    private void LeaveGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel(0);
     }
 
     IEnumerator DelayCoroutine()
