@@ -6,7 +6,7 @@ using System.IO;
 using System;
 using System.Threading.Tasks;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameData _gameData;
     [SerializeField] private Transform[] _levelSpawnPoints;
