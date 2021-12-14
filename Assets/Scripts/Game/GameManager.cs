@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     public event Action<Minigame> OnMinigameAdded;
     public event Action<Minigame> OnMinigameRemoved;
     public event Action OnTasksUpdated;
+    public event Action CrewmatesWon;
+    public event Action ImpostersWon;
 
     private void Awake()
     {
@@ -152,13 +154,13 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     void RPC_CrewmatesWon()
     {
-        Debug.LogError("Tasks completed - win for crewmates!");
+        CrewmatesWon?.Invoke();
     }
 
     [PunRPC]
     void RPC_ImpostorsWon()
     {
-        Debug.LogError("Crewmate count <= impostor count - win for impostors!");
+        ImpostersWon?.Invoke();
     }
 
     public void Destroy()

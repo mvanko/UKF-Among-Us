@@ -19,10 +19,13 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] private Button continueButton;
     [SerializeField] private Button leaveButton;
 
-    [SerializeField] private Text bodyReportedText;
     [SerializeField] private Text killCooldownText;
+    [SerializeField] private Text impostersWonText;
+    [SerializeField] private Text crewmatesWonText;
 
     [SerializeField] private GameObject settingPanel;
+    [SerializeField] private GameObject reportPanel;
+    [SerializeField] private GameObject wonPanel;
     [SerializeField] private Canvas gameCanvas;
     [SerializeField] private Canvas reportCanvas;
 
@@ -58,6 +61,8 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
             GameManager.Instance.OnMinigameAdded -= (minigame) => UpdateProgressBar();
             GameManager.Instance.OnMinigameRemoved -= (minigame) => UpdateProgressBar();
             GameManager.Instance.OnTasksUpdated -= UpdateProgressBar;
+            GameManager.Instance.CrewmatesWon -= CrewmatesWon;
+            GameManager.Instance.ImpostersWon -= ImpostersWon;
         }
 
         continueButton.onClick.RemoveListener(ContinueGame);
@@ -69,6 +74,8 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
     private void RegisterGameManagerCallbacks() 
     {
         GameManager.Instance.OnTasksUpdated += UpdateProgressBar;
+        GameManager.Instance.CrewmatesWon += CrewmatesWon;
+        GameManager.Instance.ImpostersWon += ImpostersWon;
         GameManager.Instance.OnMinigameAdded += (minigame) => UpdateProgressBar();
         GameManager.Instance.OnMinigameRemoved += (minigame) => UpdateProgressBar();
     }
@@ -125,7 +132,7 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void BodyFound()
     {
-        bodyReportedText.gameObject.SetActive(true);
+        reportPanel.gameObject.SetActive(true);
         StartCoroutine(DelayCoroutine());
 
     }
@@ -163,12 +170,33 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
         base.OnLeftRoom();
     }
 
+    private void CrewmatesWon()
+    {
+        wonPanel.SetActive(true);
+        crewmatesWonText.gameObject.SetActive(true);
+        StartCoroutine(LoadMainMenu());
+    }
+
+    private void ImpostersWon()
+    {
+        wonPanel.SetActive(true);
+        impostersWonText.gameObject.SetActive(true);
+        StartCoroutine(LoadMainMenu());
+    }
+
+
     IEnumerator DelayCoroutine()
     {
         yield return new WaitForSeconds(3);
 
         gameCanvas.gameObject.SetActive(false);
         reportCanvas.gameObject.SetActive(true);
+    }
+
+    IEnumerator LoadMainMenu()
+    {
+        yield return new WaitForSeconds(5f);
+        LeaveGame();
     }
 
     private void Update()

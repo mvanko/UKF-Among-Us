@@ -25,7 +25,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener, IOnEventCallback
 
     public void DebugReturn(DebugLevel level, string message)
     {
-        return;
+        
     }
 
     public void OnChatStateChange(ChatState state)

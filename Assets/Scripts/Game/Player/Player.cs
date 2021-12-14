@@ -94,6 +94,11 @@ public class Player : MonoBehaviour, IPunObservable
         INTERACTION.performed += Interact;
 
         _PV = GetComponent<PhotonView>();
+
+        if (SceneManager.GetActiveScene().name == "Waiting Room")
+        {
+            myColor = new Vector4(1, 1, 1, 1);
+        }
     }
 
     void OnDestroy()
@@ -132,14 +137,12 @@ public class Player : MonoBehaviour, IPunObservable
             _playerNameText.text = _PV.Owner.NickName;
         }
 
-        if (myColor == Color.clear)
-            myColor = Color.white;
-
         if (_PV != null && !_PV.IsMine)
         {
             myCamera.gameObject.SetActive(false);
             lightMask.SetActive(false);
         }
+        
 
         if (_PV != null && !_PV.IsMine)
         {
@@ -256,6 +259,11 @@ public class Player : MonoBehaviour, IPunObservable
         }
     }
 
+    public Color GetColor()
+    {
+        return _playerSpriteRenderer.color;
+    }
+
     void KillTarget(InputAction.CallbackContext context)
     {
 
@@ -263,22 +271,24 @@ public class Player : MonoBehaviour, IPunObservable
         {
             return;
         }
-
-        if (context.phase == InputActionPhase.Performed)
+        if (KillCooldown <= 0)
         {
-            if (targets.Count == 0)
-                return;
-            else
+            if (context.phase == InputActionPhase.Performed)
             {
-                Player target = targets[targets.Count - 1];
-                if (target.isDead)
+                if (targets.Count == 0)
                     return;
-                _playerTransform.position = target._playerTransform.position;
-                target._PV.RPC("RPC_Kill", RpcTarget.All);
-                targets.Remove(target);
+                else
+                {
+                    Player target = targets[targets.Count - 1];
+                    if (target.isDead)
+                        return;
+                    _playerTransform.position = target._playerTransform.position;
+                    target._PV.RPC("RPC_Kill", RpcTarget.All);
+                    targets.Remove(target);
 
-                killCooldown = 20f;
-                OnKillAvailable?.Invoke(false);
+                    killCooldown = 20f;
+                    OnKillAvailable?.Invoke(false);
+                }
             }
         }
     }

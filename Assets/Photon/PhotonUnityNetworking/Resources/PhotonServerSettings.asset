@@ -49,6 +49,7 @@ MonoBehaviour:
   - RPC_CrewmatesWon
   - RPC_ImpostorsWon
   - SendToAll
+  - RPC_SendColor
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
