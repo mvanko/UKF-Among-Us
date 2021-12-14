@@ -41,6 +41,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     public static bool destroyInstance = false;
     public static Player LocalPlayer => _localPlayer;
+    private int actorNumber = 0;
 
     public static List<Transform> allBodies = new List<Transform>();
     List<Transform> bodiesFound = new List<Transform>();
@@ -94,6 +95,7 @@ public class Player : MonoBehaviour, IPunObservable
         INTERACTION.performed += Interact;
 
         _PV = GetComponent<PhotonView>();
+        actorNumber = _PV.Owner.ActorNumber;
 
         if (SceneManager.GetActiveScene().name == "Waiting Room")
         {
@@ -143,11 +145,16 @@ public class Player : MonoBehaviour, IPunObservable
             lightMask.SetActive(false);
         }
         
-
         if (_PV != null && !_PV.IsMine)
         {
             return;
         }
+
+        if (SceneManager.GetActiveScene().name != "Waiting Room")
+        {
+            _PV.RPC("RPC_SetColor", RpcTarget.All, actorNumber, myColor.r, myColor.g, myColor.b);
+        }
+
         _playerSpriteRenderer.color = myColor;
     }
 
@@ -218,6 +225,15 @@ public class Player : MonoBehaviour, IPunObservable
         destroyInstance = false;
         _localPlayer = null;
         allBodies.Clear();
+    }
+
+    [PunRPC]
+    private void RPC_SetColor(int ActorNumber, float r, float g, float b)
+    {
+        if (actorNumber == ActorNumber)
+        {
+            _playerSpriteRenderer.color = new Color(r, g, b);
+        }
     }
 
     public void SetRole(int bullyNo1, int bullyNo2, int bullyNo3)
