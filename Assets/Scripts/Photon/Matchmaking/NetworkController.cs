@@ -14,7 +14,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Awake()
     {
-        if (PhotonNetwork.NetworkClientState != Photon.Realtime.ClientState.ConnectingToMasterServer)
+        if (PhotonNetwork.NetworkClientState != Photon.Realtime.ClientState.ConnectingToMasterServer 
+            && PhotonNetwork.NetworkClientState != Photon.Realtime.ClientState.ConnectedToMasterServer)
         {
             PhotonNetwork.ConnectUsingSettings();
         }

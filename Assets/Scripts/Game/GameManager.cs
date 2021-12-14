@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using System;
+using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
@@ -67,7 +68,10 @@ public class GameManager : MonoBehaviour
             Player.OnPlayerReady -= MakeInitialSyncCalls;
         }
         Player.OnPlayerReady -= RegisterCallbacks;
-        Player.LocalPlayer.OnMinigameWon -= RemoveActiveTask;
+        if (Player.LocalPlayer != null)
+        {
+            Player.LocalPlayer.OnMinigameWon -= RemoveActiveTask;
+        }
     }
 
     private void RegisterCallbacks()
@@ -155,6 +159,19 @@ public class GameManager : MonoBehaviour
     void RPC_ImpostorsWon()
     {
         Debug.LogError("Crewmate count <= impostor count - win for impostors!");
+    }
+
+    public void Destroy()
+    {
+        Destroy(this.gameObject);
+        Player.destroyInstance = true;
+        DelayedInstanceDestroy();
+    }
+
+    private async void DelayedInstanceDestroy()
+    {
+        await Task.Delay(500);
+        Instance = null;
     }
 
     private void CheckWinForCrewmates()

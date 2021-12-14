@@ -20,7 +20,10 @@ public class TaskItem : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.Instance.OnMinigameRemoved -= MarkMinigameAsWon;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnMinigameRemoved -= MarkMinigameAsWon;
+        }
     }
 
     private void MarkMinigameAsWon(Minigame minigame)

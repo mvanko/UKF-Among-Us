@@ -9,8 +9,9 @@ using System.IO;
 using UnityEngine.UI;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using System.Threading.Tasks;
 
-public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
+public class Player : MonoBehaviour, IPunObservable
 {
     [SerializeField] private GameObject _deadBodyPrototype;
     [SerializeField] private GameObject _otherPlayer;
@@ -38,6 +39,7 @@ public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
 
     private List<Player> targets = new List<Player>();
 
+    public static bool destroyInstance = false;
     public static Player LocalPlayer => _localPlayer;
 
     public static List<Transform> allBodies = new List<Transform>();
@@ -99,6 +101,7 @@ public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
         if (this == LocalPlayer)
         {
             InteractableObject.OnHighlighted -= UpdateInteractableHighlighted;
+            if(destroyInstance) DelayedInstanceDestroy();
         }
     }
 
@@ -204,6 +207,14 @@ public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
         MOUSE.Disable();
         INTERACTION.Disable();
         PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    private async void DelayedInstanceDestroy()
+    {
+        await Task.Delay(500);
+        destroyInstance = false;
+        _localPlayer = null;
+        allBodies.Clear();
     }
 
     public void SetRole(int bullyNo1, int bullyNo2, int bullyNo3)
@@ -348,7 +359,7 @@ public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
     private void Update()
     {
 
-        if (_PV != null && !_PV.IsMine || activeInteractableObject != null)
+        if (_PV != null && !_PV.IsMine || activeInteractableObject != null || SceneManager.GetActiveScene().name == "Waiting Room")
         {
             return;
         }
@@ -529,10 +540,5 @@ public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
             direction = (float)stream.ReceiveNext();
             this._isImposter = (bool)stream.ReceiveNext();
         }
-    }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        throw new NotImplementedException();
     }
 }

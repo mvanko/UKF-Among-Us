@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class HUD : MonoBehaviour, IOnEventCallback
+public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [SerializeField] private Image progressBar;
     [SerializeField] private Button killButton;
@@ -43,16 +43,22 @@ public class HUD : MonoBehaviour, IOnEventCallback
     private void OnDestroy()
     {
         Player.OnPlayerReady -= RegisterPlayerCallbacks;
-        Player.LocalPlayer.OnPlayerUpdated -= UpdateGameUI;
-        Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
-        Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
-        Player.LocalPlayer.OnUseAvailable -= UpdateUseButton;
+        if (Player.LocalPlayer != null)
+        {
+            Player.LocalPlayer.OnPlayerUpdated -= UpdateGameUI;
+            Player.LocalPlayer.OnKillAvailable -= UpdateKillButton;
+            Player.LocalPlayer.OnReportAvailable -= UpdateReportButton;
+            Player.LocalPlayer.OnUseAvailable -= UpdateUseButton;
+        }
 
         GameManager.OnGameManagerReady -= RegisterGameManagerCallbacks;
 
-        GameManager.Instance.OnMinigameAdded -= (minigame) => UpdateProgressBar();
-        GameManager.Instance.OnMinigameRemoved -= (minigame) => UpdateProgressBar();
-        GameManager.Instance.OnTasksUpdated -= UpdateProgressBar;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnMinigameAdded -= (minigame) => UpdateProgressBar();
+            GameManager.Instance.OnMinigameRemoved -= (minigame) => UpdateProgressBar();
+            GameManager.Instance.OnTasksUpdated -= UpdateProgressBar;
+        }
 
         continueButton.onClick.RemoveListener(ContinueGame);
         leaveButton.onClick.RemoveListener(LeaveGame);
@@ -147,8 +153,14 @@ public class HUD : MonoBehaviour, IOnEventCallback
 
     private void LeaveGame()
     {
+        GameManager.Instance.Destroy();
         PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
         PhotonNetwork.LoadLevel(0);
+        base.OnLeftRoom();
     }
 
     IEnumerator DelayCoroutine()
@@ -161,13 +173,16 @@ public class HUD : MonoBehaviour, IOnEventCallback
 
     private void Update()
     {
-        if(Player.LocalPlayer.KillCooldown > 0f)
+        if (Player.LocalPlayer != null)
         {
-            killCooldownText.text = $"{(int) Player.LocalPlayer.KillCooldown}";
-        }
-        else if(killCooldownText.gameObject.activeSelf)
-        {
-            killCooldownText.gameObject.SetActive(false);
+            if (Player.LocalPlayer.KillCooldown > 0f)
+            {
+                killCooldownText.text = $"{(int)Player.LocalPlayer.KillCooldown}";
+            }
+            else if (killCooldownText.gameObject.activeSelf)
+            {
+                killCooldownText.gameObject.SetActive(false);
+            }
         }
     }
 
