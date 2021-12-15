@@ -551,7 +551,15 @@ public class Player : MonoBehaviour, IPunObservable
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         PhotonNetwork.RaiseEvent(SendReportToAll, content, raiseEventOptions, SendOptions.SendReliable);
         _playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        StartCoroutine(WaitForEndOfFrame());
         OnReportStarted?.Invoke();
+    }
+
+    private IEnumerator WaitForEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        allBodies = new List<Transform>();
+        yield return null;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
