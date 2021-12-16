@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
@@ -22,6 +21,7 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] private Text killCooldownText;
     [SerializeField] private Text impostersWonText;
     [SerializeField] private Text crewmatesWonText;
+    [SerializeField] private Text locationText;
 
     [SerializeField] private GameObject settingPanel;
     [SerializeField] private GameObject reportPanel;
@@ -29,8 +29,11 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] private Canvas gameCanvas;
     [SerializeField] private Canvas reportCanvas;
 
+    public static HUD Instance;
+
     void Awake()
     {
+        Instance = this;
         Player.OnPlayerReady += RegisterPlayerCallbacks;
         GameManager.OnGameManagerReady += RegisterGameManagerCallbacks;
     }
@@ -120,13 +123,23 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    private void ShowLocation(string mapLocation)
+    {
+        string location = mapLocation;
+        locationText.gameObject.SetActive(true);
+        locationText.text = location;
+        StartCoroutine(LocationTimer());
+    }
+
     private void OnEnable()
     {
+        MapLocations.showMapLocation += ShowLocation;
         PhotonNetwork.AddCallbackTarget(this);
     }
 
     private void OnDisable()
     {
+        MapLocations.showMapLocation -= ShowLocation;
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
@@ -184,19 +197,31 @@ public class HUD : MonoBehaviourPunCallbacks, IOnEventCallback
         StartCoroutine(LoadMainMenu());
     }
 
+    public void HideReportHUD()
+    {
+        reportCanvas.gameObject.SetActive(false);
+        gameCanvas.gameObject.SetActive(true);
+    }
+
 
     IEnumerator DelayCoroutine()
     {
         yield return new WaitForSeconds(3);
-
+        reportPanel.gameObject.SetActive(false);
         gameCanvas.gameObject.SetActive(false);
         reportCanvas.gameObject.SetActive(true);
     }
 
     IEnumerator LoadMainMenu()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(5);
         LeaveGame();
+    }
+
+    IEnumerator LocationTimer()
+    {
+        yield return new WaitForSeconds(1);
+        locationText.gameObject.SetActive(false);
     }
 
     private void Update()

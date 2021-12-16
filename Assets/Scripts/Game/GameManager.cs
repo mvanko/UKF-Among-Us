@@ -11,9 +11,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameData _gameData;
     [SerializeField] private Transform[] _levelSpawnPoints;
 
-    [SerializeField] private Canvas _reportCanvas;
-    [SerializeField] private Canvas _gameCanvas;
-
     private const int NumberOfTasks = 5;
     private int numberOfCompletedTasks = 0;
     private int totalTasks = 0;
@@ -214,5 +211,23 @@ public class GameManager : MonoBehaviourPunCallbacks
         _myPV.RPC("RPC_SyncTaskCompleted", RpcTarget.All);
         _activeTasks.Remove(minigame);
         OnMinigameRemoved?.Invoke(minigame);
+    }
+
+    public int GetDeadPlayersCount()
+    {
+        return _deadPlayers.Count;
+    }
+
+    public List<int> GetDeadPlayersActorNumbers()
+    {
+        List<int> deadPlayersActorNumbers = new List<int>();
+
+        foreach(Player p in _deadPlayers)
+        {
+            int actorNumber = p.GetActorNumber();
+            deadPlayersActorNumbers.Add(actorNumber);
+        }
+
+        return deadPlayersActorNumbers;
     }
 }

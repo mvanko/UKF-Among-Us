@@ -4610,12 +4610,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "A crew of 4-10 players are at a location doing tasks while 1-3 impostors
+  m_text: "A crew of 3-8 players are at a location doing tasks while 1-3 impostors
     (usually 2) are doing everything they can to sabotage their efforts and kill
     them all. \n\nThe game ends in one of four ways:\n\r\n-All impostors are dead.
     (Crew Win)\r\n-All tasks are completed. (Crew Win)\r\n-There are an equal number
-    of crew and impostors. (Impostor Win)\r\n-The crew fail to stop a catastrophic
-    sabotage (Impostor Win)"
+    of crew and impostors. (Impostor Win)\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

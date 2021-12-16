@@ -11,7 +11,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using System.Threading.Tasks;
 
-public class Player : MonoBehaviour, IPunObservable
+public class Player : MonoBehaviour, IPunObservable, IOnEventCallback
 {
     [SerializeField] private GameObject _deadBodyPrototype;
     [SerializeField] private GameObject _otherPlayer;
@@ -69,6 +69,7 @@ public class Player : MonoBehaviour, IPunObservable
     private float killCooldown = 30f;
 
     public const byte SendReportToAll = 2;
+    public const byte SendUnfreezeToAll = 99;
 
     public float KillCooldown => killCooldown;
 
@@ -96,11 +97,6 @@ public class Player : MonoBehaviour, IPunObservable
 
         _PV = GetComponent<PhotonView>();
         actorNumber = _PV.Owner.ActorNumber;
-
-        if (SceneManager.GetActiveScene().name == "Waiting Room")
-        {
-            myColor = new Vector4(1, 1, 1, 1);
-        }
     }
 
     void OnDestroy()
@@ -280,6 +276,11 @@ public class Player : MonoBehaviour, IPunObservable
         return _playerSpriteRenderer.color;
     }
 
+    public int GetActorNumber()
+    {
+        return actorNumber;
+    }
+
     void KillTarget(InputAction.CallbackContext context)
     {
 
@@ -316,6 +317,20 @@ public class Player : MonoBehaviour, IPunObservable
         GameManager.Instance.AddDeadPlayer(this);
     }
 
+    [PunRPC]
+    void RPC_Kick()
+    {
+        isDead = true;
+        gameObject.layer = 9;
+        foreach (Transform child in gameObject.GetComponentsInChildren<Transform>(true))
+        {
+            child.gameObject.layer = 9;
+        }
+        _playerCollider.enabled = false;
+        GameManager.Instance.AddDeadPlayer(this);
+
+    }
+
     public void Die()
     {
         isDead = true;
@@ -335,9 +350,10 @@ public class Player : MonoBehaviour, IPunObservable
 
         myCamera.cullingMask = everythingMask;
 
+
         DeadBody deadBody = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeadBody"), transform.position, transform.rotation).GetComponent<DeadBody>();
         deadBody.Setup(_playerSpriteRenderer.color);
-
+        
         OnPlayerUpdated?.Invoke();
     }
 
@@ -575,4 +591,26 @@ public class Player : MonoBehaviour, IPunObservable
             this._isImposter = (bool)stream.ReceiveNext();
         }
     }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if(photonEvent.Code == SendReportToAll)
+        {
+            _playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        }
+
+        if (photonEvent.Code == SendUnfreezeToAll)
+        {
+            int votedPlayerActorNumber = (int)photonEvent.CustomData;
+            if (votedPlayerActorNumber == LocalPlayer.actorNumber)
+            {
+                _PV.RPC("RPC_Kick", RpcTarget.All);
+            }
+
+            _playerRigidbody.constraints = RigidbodyConstraints.None;
+            _playerRigidbody.constraints = RigidbodyConstraints.FreezePositionZ;
+            _playerRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+            _localPlayer.transform.position = GameManager.Instance.SpawnPoints[LocalPlayer.actorNumber-1].GetChild(0).position;
+        }
+    }  
 }

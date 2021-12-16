@@ -6,9 +6,9 @@ public class WaitingRoomLight : MonoBehaviour
 {
     Light2D playerLight;
 
-    private float innerRadius_old = 5f;
+    private float innerRadius_old = 0.1f;
     private float innerRadius_new = 35f;
-    private float outerRadius_old = 25f;
+    private float outerRadius_old = 23f;
     private float outerRadius_new = 50f;
     private string sceneName;
 

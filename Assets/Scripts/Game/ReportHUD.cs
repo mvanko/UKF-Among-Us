@@ -18,8 +18,6 @@ public class ReportHUD : MonoBehaviour
     private float votingTime = 101f;
     private Scene scene;
 
-    [SerializeField] private GameObject[] buttonSpawns;
-
     private GameObject _playerButton;
 
     private void Awake()
@@ -31,12 +29,6 @@ public class ReportHUD : MonoBehaviour
     void Start()
     {
         scene = SceneManager.GetActiveScene();
-        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
-        {
-            buttonSpawns[p.ActorNumber - 1].SetActive(true);
-            buttonSpawns[p.ActorNumber - 1].GetComponentInChildren<Text>().text = p.NickName;
-
-        }
     }
 
     // Update is called once per frame
