@@ -3,7 +3,30 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Interactable
+  - Vent
+  - RecepciaTrigger
+  - ToaletyTrigger
+  - HorizontalVestibulTrigger
+  - VerticalVestibulTrigger
+  - HorizontalKniznicaTrigger
+  - HorizontalJedalenTrigger
+  - VerticalJedalenTrigger
+  - VerticalPrednaskovaTrigger
+  - VerticalVestibulTriggerRight
+  - VerticalVestibulTriggerLeft
+  - AulaTrigger
+  - VerticalKniznicaTriggerRight
+  - VerticalKniznicaTriggerLeft
+  - HorizontalPrednaskovaTrigger
+  - VerticalStrojovnaTrigger
+  - HorizontalStrojovnaTriggerUpper
+  - HorizontalStrojovnaTriggerLower
+  - VerticalPCucebnaTriggerLeft
+  - VerticalPCucebnaTriggerRight
+  - VerticalChodbaTriggerLeft
+  - VerticalChodbaTriggerRight
   layers:
   - Default
   - TransparentFX
@@ -13,8 +36,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - OtherSide
+  - Ghost
   - 
   - 
   - 
